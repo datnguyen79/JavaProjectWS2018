@@ -20,10 +20,10 @@ import javafx.scene.text.Font;
 public class inputMatrix {
     //Default matrix size
     static int row = 6, col = 7;
-    
     static TextField[][] tf;
 
-    public static GridPane matrixDisplay(){
+    public static GridPane matrixDisplay(){        
+        
         GridPane grid = new GridPane();
         grid.setVgap(5);
         grid.setHgap(5);

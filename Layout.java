@@ -11,7 +11,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -24,14 +23,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -46,6 +40,8 @@ public class Layout  extends inputMatrix{
      static BorderPane root = new BorderPane();
      static int preMatrix[][] = new int[row][col];
      static int preRow, preCol;
+     static TextField numDes = new TextField();
+     static TextField numGen = new TextField();
     
     public static VBox topLayout(){
          Stage window = new Stage();
@@ -74,18 +70,47 @@ public class Layout  extends inputMatrix{
         file.getItems().add(menuSave);
         help.getItems().add(menuAbout);
         
-        TextArea text = new TextArea();
+        
+        //Receive matrix from text file
+        TextArea textArea = new TextArea(); //use TextArea for holding input text
         menuOpen.setOnAction((final ActionEvent e) -> {
             try {
                 File file1 = fileChooser.showOpenDialog(window);
+                if(file1 == null){
+                    PopupBox.cancelBox();
+                }
+                else{
                 Scanner sc = new Scanner(file1);
                 while (sc.hasNextLine()) 
-                    text.appendText(sc.nextLine()+"\n");
-            } catch (FileNotFoundException ex) {
+                    textArea.appendText(sc.nextLine()+"\n");
+                }
+            } 
+            catch (FileNotFoundException ex) {
                 Logger.getLogger(Layout.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(PopupBox.previewBox(text)) ;
+            if(PopupBox.previewBox(textArea)){
+                String text = textArea.getText();
+                String[] str1 = text.split("\n");
+                String[] str0 = str1[0].split(" ");
+                int matrix[][] = new int[row][col];
+                row = str1.length;
+                col = str0.length;
+                root.setLeft(leftLayout());
+                for(int i=0; i < row; i++){
+                    String[] str2 = str1[i].split(" ");
+                    for(int j = 0; j < col; j++){
+                    tf[i][j].setText(str2[j]);
+                    }
+                }
+              textArea.setText("");
+              numGen.setText(row+"");
+              numDes.setText(col+"");
+                
+            }
          });
+        menuAbout.setOnAction(e ->{
+            PopupBox.aboutBox();
+        });
 
         menuBar.getMenus().addAll(file,help);
         //Text Section
@@ -131,11 +156,9 @@ public class Layout  extends inputMatrix{
         Label gen = new Label("Number of Generator:   ");
         gen.setId("labelColor1");
         //TextField
-        TextField numDes = new TextField();
         numDes.setPrefHeight(30);
         numDes.setPrefWidth(80);
         numDes.setText(Integer.toString(col));
-        TextField numGen = new TextField();
         numGen.setPrefHeight(30);
         numGen.setPrefWidth(80);
         numGen.setText(Integer.toString(row));
@@ -195,7 +218,7 @@ public class Layout  extends inputMatrix{
         LabelnText1.getChildren().addAll(des,numDes,addButtonD, subButtonD, resizeButton);
         LabelnText2.getChildren().addAll(gen,numGen,addButtonG, subButtonG, fillButton);
         tab1.getChildren().addAll(LabelnText1,LabelnText2);
-        tab1.setStyle("-fx-background-color :  #052d42");
+        tab1.setId("tabBG");
         
         
         ///Bottom 2 Section
@@ -223,7 +246,7 @@ public class Layout  extends inputMatrix{
         botTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         Tab resizeTab = new Tab("Edit Size");
         Tab settingGen = new Tab("Set Generator");
-        resizeTab.setId("selectedTab");
+        //botTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldValue, newValue) -> botTabPane.setId("selectedTab"));
         resizeTab.setContent(tab1);
         
 
