@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author ADMIN
+ * @author Ho Tat Dat Nguyen
  */
 public class JavaProjectWS2018 extends Application {
     
@@ -20,7 +20,7 @@ public class JavaProjectWS2018 extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        Scene scene = new Scene(Layout.mainLayout(primaryStage), 960, 720);
+        Scene scene = new Scene(Layout.mainLayout(primaryStage), 840, 720);
         scene.getStylesheets().add(getClass().getResource("styling.css").toExternalForm());
         primaryStage.setTitle("Minimize The Cost of Electricity Transmisson");
         primaryStage.setScene(scene);

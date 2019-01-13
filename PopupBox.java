@@ -31,14 +31,14 @@ public class PopupBox {
     static boolean answer;
     static boolean triggered;
     
-    public static void confirmBox(String title, String message, Stage stage){
+    public static void confirmBox(Stage stage){
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
+        window.setTitle("Warning");
         window.setMinWidth(300);
         
         Label label = new Label();
-        label.setText(message);
+        label.setText("Are you sure you want to exit");
         
         //Create two button yes and no
         Button yesButton = new Button("Yes");
@@ -208,7 +208,7 @@ public class PopupBox {
         text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSON COST(ACO)");
         text2 = new Text(10, 50, "Frankfurt University of Applied Science\n Java Project - Winter Semester 2018");
         text3 = new Text(10, 50, "Team 6:");
-        text4 = new Text(10, 50, "Chi Minh Truong\nHo Tat Dat Nguyen\nKhac Nhu Phung\nNgoc Thach Le");
+        text4 = new Text(10, 50, "-Chi Minh Truong\n-Ho Tat Dat Nguyen\n-Khac Nhu Phung\n-Ngoc Thach Le");
         text1.setFont(new Font(20));
         text2.setFont(new Font(18));
         text3.setFont(new Font(18));

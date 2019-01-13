@@ -7,6 +7,8 @@ package javaprojectws2018;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,13 +37,31 @@ import javafx.stage.Stage;
  *
  * @author STEVEN
  */
+
+/*
+* Create Layout class inherieting the inputMatrix class
+*/
 public class Layout  extends inputMatrix{
     //Global variable
-     static BorderPane root = new BorderPane();
-     static int preMatrix[][] = new int[row][col];
-     static int preRow, preCol;
-     static TextField numDes = new TextField();
-     static TextField numGen = new TextField();
+        // Main layout
+    static BorderPane root = new BorderPane(); 
+        // Matrix to hold old value and restore it later
+    static int preMatrix[][] = new int[row][col];
+    static int preRow, preCol;
+        // Text field to hold the number of Generator and Destination
+    static TextField numDes = new TextField();
+    static TextField numGen = new TextField();
+     
+    private static void saveTextToFile(String content, File file) {
+        try {
+            PrintWriter writer;
+            writer = new PrintWriter(file);
+            writer.println(content);
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Layout.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public static VBox topLayout(){
          Stage window = new Stage();
@@ -69,8 +89,9 @@ public class Layout  extends inputMatrix{
         file.getItems().add(separator);
         file.getItems().add(menuSave);
         help.getItems().add(menuAbout);
+        ////Set action for each component in the menu bar
         
-        
+        ///Open action
         //Receive matrix from text file
         TextArea textArea = new TextArea(); //use TextArea for holding input text
         menuOpen.setOnAction((final ActionEvent e) -> {
@@ -108,16 +129,31 @@ public class Layout  extends inputMatrix{
                 
             }
          });
+        ///about button action
         menuAbout.setOnAction(e ->{
             PopupBox.aboutBox();
         });
-
-        menuBar.getMenus().addAll(file,help);
-        //Text Section
+        ///save button action
+        menuSave.setOnAction(e -> {
+            //Set extension filter for text files
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().add(extFilter);
+ 
+            //Show save file dialog
+            File file1 = fileChooser.showSaveDialog(window);
+ 
+            if (file1 != null) {
+                saveTextToFile(inputMatrix.matrixToText(inputMatrix.getMatrixValue(), row, col), file1);
+            }
+        });
         
+        ///Gathering components of menu bar
+        menuBar.getMenus().addAll(file,help);
+        
+
+        ////Text Section
         Text text1, text2;
         text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSON COST");
-        //text1.setFill(Color.TEAL);
         text1.setId("textColor1");
         text2 = new Text(10, 50, "USING ANT COLONY OPTIMIZATION(ACO)");
         text2.setId("textColor1");
@@ -214,7 +250,7 @@ public class Layout  extends inputMatrix{
            }
         });
         
-            //Adding all components
+        //Adding all components
         LabelnText1.getChildren().addAll(des,numDes,addButtonD, subButtonD, resizeButton);
         LabelnText2.getChildren().addAll(gen,numGen,addButtonG, subButtonG, fillButton);
         tab1.getChildren().addAll(LabelnText1,LabelnText2);
@@ -233,9 +269,9 @@ public class Layout  extends inputMatrix{
         createButton.setPrefSize(80, 30);
         clearButton.setPrefSize(80, 30);
         closeButton.setPrefSize(80, 30);
-            //Set Button event
+        //Set Button event
         closeButton.setOnAction(e ->{
-            PopupBox.confirmBox("Warning", "Are you sure you want to exit?",stage);
+            PopupBox.confirmBox(stage);
         });
          clearButton.setOnAction(e ->{
             inputMatrix.clearMatrixValue();
@@ -246,12 +282,9 @@ public class Layout  extends inputMatrix{
         botTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         Tab resizeTab = new Tab("Edit Size");
         Tab settingGen = new Tab("Set Generator");
-        //botTabPane.getSelectionModel().selectedItemProperty().addListener((observer, oldValue, newValue) -> botTabPane.setId("selectedTab"));
         resizeTab.setContent(tab1);
-        
-
          
-            //Adding all components
+        //Adding all components of the bottom layout
         bottom2.getChildren().addAll(createButton, clearButton, closeButton);
         botTabPane.getTabs().addAll(resizeTab,settingGen);
         bottom.getChildren().addAll(botTabPane, bottom2);
@@ -273,9 +306,24 @@ public class Layout  extends inputMatrix{
         return left;
     }
     
+    public static VBox rightLayout(){
+        /*Main Layout contains: text3, matrixGrid(gridPane)
+         *Section: Right
+         *Use in: Border Pane
+         */
+        VBox right = new VBox(10);
+        Text text3 = new Text(10, 50, "Generator State: ");
+        text3.setFont(new Font(20));
+        text3.setId("textColor2");
+        right.getChildren().addAll(text3, inputMatrix.generatorState());
+        right.setPadding( new Insets(10, 10, 10, 10));
+        return right;
+    }
+    
     public static BorderPane mainLayout(Stage stage){
         root.setTop(Layout.topLayout());
         root.setLeft(Layout.leftLayout());
+        root.setRight(Layout.rightLayout());
         root.setBottom(Layout.botLayout(stage));
         
         return root;

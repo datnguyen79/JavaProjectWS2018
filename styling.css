@@ -5,7 +5,7 @@ and open the template in the editor.
 */
 /* 
     Created on : Dec 13, 2018, 12:33:49 AM
-    Author     : ADMIN
+    Author     : Ho Tat Dat Nguyen
 */
 
 
@@ -19,6 +19,7 @@ and open the template in the editor.
     -fx-fill: #92c1f8;
     -fx-font-weight: bold;
 }
+
 .root{
     -fx-background-color: #282828;
 }
@@ -28,15 +29,12 @@ and open the template in the editor.
     -fx-font-weight: bold;
 }
 
-
-
 .tab:selected  {
     -fx-text-base-color: white;
     -fx-background-color: #052d42;
     -fx-border-radius: 10 10 0 0;
     -fx-focus-color:  white;
 } 
-
 
 .button{
     -fx-background-color: 
