@@ -17,7 +17,7 @@ public class CircleCell extends Cell {
         view.setStroke(Color.DODGERBLUE);
         view.setFill(Color.DODGERBLUE);
 
-        setView( view);
+        setView( view,id);
 
     }
 

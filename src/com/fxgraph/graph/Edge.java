@@ -1,14 +1,17 @@
 package com.fxgraph.graph;
 
 import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
-public class Edge extends Group {
+public class Edge extends Pane {
 
     protected Cell source;
     protected Cell target;
 
     Line line;
+    Text weight;
 
     public Edge(Cell source, Cell target) {
 
@@ -19,6 +22,7 @@ public class Edge extends Group {
         target.addCellParent(source);
 
         line = new Line();
+        weight = new Text();
 
         line.setStrokeWidth(3);
 

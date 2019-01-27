@@ -10,8 +10,8 @@ public class HexagonCell extends Cell {
     public HexagonCell(String id) {
         super( id);
 
-        double width = 30;
-        double height = 30;
+        //double width = 30;
+        //double height = 30;
 
         Polygon view = new Polygon( 30,3,10,3,0,20,10,37,30,37,40,20);
 
@@ -19,7 +19,7 @@ public class HexagonCell extends Cell {
         view.setFill(Color.RED);
 
 
-        setView( view);
+        setView( view,id);
 
     }
 

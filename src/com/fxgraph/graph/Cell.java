@@ -2,8 +2,11 @@ package com.fxgraph.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+
 
 public class Cell extends Pane {
 
@@ -12,7 +15,8 @@ public class Cell extends Pane {
     List<Cell> children = new ArrayList<>();
     List<Cell> parents = new ArrayList<>();
 
-    Node view;
+    Node shape;
+    //String text;
 
     public Cell(String cellId) {
         this.cellId = cellId;
@@ -38,15 +42,19 @@ public class Cell extends Pane {
         children.remove(cell);
     }
 
-    public void setView(Node view) {
+    public void setView(Node shape, String cellId) {
+        Text text = new Text(10,25,cellId);
+        text.setFont(new Font(16));
+        text.setStyle("-fx-font-weight: bold");
 
-        this.view = view;
-        getChildren().add(view);
+        this.shape = shape;
+
+        getChildren().addAll(shape,text);
 
     }
 
     public Node getView() {
-        return this.view;
+        return this.shape;
     }
 
     public String getCellId() {
