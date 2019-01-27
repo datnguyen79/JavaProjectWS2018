@@ -139,11 +139,11 @@ public class InputMatrix {
         return intMatrix;
     }
 
-    public static String matrixToText(int matrix[][], int row, int col){
+    public static String matrixToText(double[][] matrix, int row, int col){
         String text = new String();
         for(int i = 0; i < row; i++){
             for(int j = 0; j < col; j++){
-                text +=Integer.toString(matrix[i][j])+" ";
+                text +=Double.toString(matrix[i][j])+" ";
             }
             text+="\n";
         }

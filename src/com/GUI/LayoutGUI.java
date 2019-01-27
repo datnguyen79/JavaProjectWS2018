@@ -27,7 +27,7 @@ public class LayoutGUI  extends InputMatrix{
     // Main layout
     private static BorderPane root = new BorderPane();
     // Matrix to hold old value and restore it later
-    static int preMatrix[][] = new int[row][col];
+    static double preMatrix[][] = new double[row][col];
     static int preRow, preCol;
     // Text field to hold the number of Generator and Destination
     static TextField numDes = new TextField();
