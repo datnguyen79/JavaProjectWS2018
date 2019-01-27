@@ -17,7 +17,7 @@ public class TriangleCell extends Cell {
 
         view.setStroke(Color.RED);
         view.setFill(Color.RED);
-        view.setText();
+
 
         setView( view);
 

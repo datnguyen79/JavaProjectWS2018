@@ -1,4 +1,4 @@
-package javaprojectws2018;
+package com.javaprojectws2018;
 
 
 import com.fxgraph.graph.Graph;
@@ -14,7 +14,7 @@ import javafx.scene.Scene;
 
 
 
-public class GraphGen extends inputMatrix{
+public class GraphGen extends InputMatrix{
 
     static Graph graph = new Graph();
 

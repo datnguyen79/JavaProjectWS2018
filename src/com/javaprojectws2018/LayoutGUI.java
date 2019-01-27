@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaprojectws2018;
+package com.javaprojectws2018;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,9 +39,9 @@ import javafx.stage.Stage;
  */
 
 /*
-* Create Layout class inherieting the inputMatrix class
+* Create LayoutGUI class inherieting the inputMatrix class
 */
-public class Layout  extends inputMatrix{
+public class LayoutGUI extends InputMatrix{
     //Global variable
         // Main layout
     private static BorderPane root = new BorderPane();
@@ -59,13 +59,13 @@ public class Layout  extends inputMatrix{
             writer.println(content);
             writer.close();
         } catch (IOException ex) {
-            Logger.getLogger(Layout.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LayoutGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public static VBox topLayout(){
          Stage window = new Stage();
-        /*Layout contains: Menu Bar, VBox(Text1 + Text2)
+        /*LayoutGUI contains: Menu Bar, VBox(Text1 + Text2)
          *Section: Top
          *Use in: Border Pane
          */
@@ -107,7 +107,7 @@ public class Layout  extends inputMatrix{
                 }
             } 
             catch (FileNotFoundException ex) {
-                Logger.getLogger(Layout.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LayoutGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
             if(PopupBox.previewBox(textArea)){
                 String text = textArea.getText();
@@ -143,7 +143,7 @@ public class Layout  extends inputMatrix{
             File file1 = fileChooser.showSaveDialog(window);
  
             if (file1 != null) {
-                saveTextToFile(inputMatrix.matrixToText(inputMatrix.getMatrixValue(), row, col), file1);
+                saveTextToFile(InputMatrix.matrixToText(InputMatrix.getMatrixValue(), row, col), file1);
             }
         });
         
@@ -170,7 +170,7 @@ public class Layout  extends inputMatrix{
     
     public static VBox botLayout(Stage stage) {
 
-        /*Main Layout contains: 
+        /*Main LayoutGUI contains:
          *Section: Bottom
          *Use in: Border Pane
          */
@@ -276,7 +276,7 @@ public class Layout  extends inputMatrix{
         });
 
         clearButton.setOnAction(e ->{
-            inputMatrix.clearMatrixValue();
+            InputMatrix.clearMatrixValue();
         });
         createButton.setOnAction(e ->{
             GraphGen.draw();
@@ -298,7 +298,7 @@ public class Layout  extends inputMatrix{
     }
     
     public static VBox leftLayout(){
-        /*Main Layout contains: text3, matrixGrid(gridPane)
+        /*Main LayoutGUI contains: text3, matrixGrid(gridPane)
          *Section: Left
          *Use in: Border Pane
          */
@@ -306,13 +306,13 @@ public class Layout  extends inputMatrix{
         Text text3 = new Text(10, 50, "(*) Input Electricity Cost: ");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
-        left.getChildren().addAll(text3, inputMatrix.matrixDisplay());
+        left.getChildren().addAll(text3, InputMatrix.matrixDisplay());
         left.setPadding( new Insets(10, 10, 10, 10));
         return left;
     }
     
     public static VBox rightLayout(){
-        /*Main Layout contains: text3, matrixGrid(gridPane)
+        /*Main LayoutGUI contains: text3, matrixGrid(gridPane)
          *Section: Right
          *Use in: Border Pane
          */
@@ -320,16 +320,16 @@ public class Layout  extends inputMatrix{
         Text text3 = new Text(10, 50, "Generator State: ");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
-        right.getChildren().addAll(text3, inputMatrix.generatorState());
+        right.getChildren().addAll(text3, InputMatrix.generatorState());
         right.setPadding( new Insets(10, 10, 10, 10));
         return right;
     }
     
     public static BorderPane mainLayout(Stage stage){
-        root.setTop(Layout.topLayout());
-        root.setLeft(Layout.leftLayout());
-        root.setRight(Layout.rightLayout());
-        root.setBottom(Layout.botLayout(stage));
+        root.setTop(LayoutGUI.topLayout());
+        root.setLeft(LayoutGUI.leftLayout());
+        root.setRight(LayoutGUI.rightLayout());
+        root.setBottom(LayoutGUI.botLayout(stage));
         
         return root;
     }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaprojectws2018;
+package com.javaprojectws2018;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
  * @author ADMIN
  */
 
-public class inputMatrix {
+public class InputMatrix {
     //Default matrix size
     static int row = 6, col = 7;
     //Text field matrix to hold the cost between cities and generators, cities

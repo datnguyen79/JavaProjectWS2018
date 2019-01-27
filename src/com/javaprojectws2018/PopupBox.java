@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaprojectws2018;
+package com.javaprojectws2018;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
