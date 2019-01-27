@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fxgraph.cells.TriangleCell;
-import com.fxgraph.cells.RectangleCell;
+import com.fxgraph.cells.HexagonCell;
+import com.fxgraph.cells.CircleCell;
 
 public class Model {
 
@@ -77,13 +77,13 @@ public class Model {
 
         switch (type) {
 
-            case RECTANGLE:
-                RectangleCell rectangleCell = new RectangleCell(id);
+            case CIRCLE:
+                CircleCell rectangleCell = new CircleCell(id);
                 addCell(rectangleCell);
                 break;
 
-            case TRIANGLE:
-                TriangleCell circleCell = new TriangleCell(id);
+            case HEXAGON:
+                HexagonCell circleCell = new HexagonCell(id);
                 addCell(circleCell);
                 break;
 

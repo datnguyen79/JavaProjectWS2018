@@ -1,0 +1,55 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 13, 2018, 12:33:49 AM
+    Author     : Ho Tat Dat Nguyen
+*/
+
+
+#textColor1 {
+    -fx-fill:  #92c1f8;
+    -fx-font-weight: bold;
+    -fx-underline: true;
+}
+
+#textColor2{
+    -fx-fill: #92c1f8;
+    -fx-font-weight: bold;
+}
+
+.root{
+    -fx-background-color: #282828;
+}
+
+#labelColor1{
+    -fx-text-fill: #ccccff;
+    -fx-font-weight: bold;
+}
+
+.tab:selected  {
+    -fx-text-base-color: white;
+    -fx-background-color: #052d42;
+    -fx-border-radius: 10 10 0 0;
+    -fx-focus-color:  white;
+} 
+
+.button{
+    -fx-background-color: 
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+
+#tabBG{
+    -fx-background-color :  #052d42;
+}
