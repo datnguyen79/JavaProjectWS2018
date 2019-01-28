@@ -1,22 +1,20 @@
 package com.GUI;
 
+import com.fxgraph.graph.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import com.fxgraph.graph.Graph;
-import com.fxgraph.graph.Layout;
-import com.fxgraph.graph.RandomLayout;
-import com.fxgraph.graph.CellType;
-import com.fxgraph.graph.Model;
+import javafx.util.Duration;
 
 
 public class GraphGen extends InputMatrix {
 
     static Graph graph = new Graph();
     static Model model = graph.getModel();
-
+    private static Edge[][] edges;
     public static void canvas() {
         Stage window = new Stage();
 
@@ -25,32 +23,35 @@ public class GraphGen extends InputMatrix {
         window.setMinWidth(800);
         window.setMinHeight(600);
 
-        BorderPane root = draw();
+        int[][] matrix = {{1,1,0,1,0},{0,1,0,0,1},{1,0,0,1,0},{0,0,0,1,1}};
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
+            int x = (int) (Math.random() * 4);
+            int y = (int) (Math.random() * 5);
+            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
+            System.out.println(x + " " + y);
+            updateGraph(matrix);
+        });
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.playFromStart();
+        BorderPane root = draw(matrix);
         Scene scene = new Scene(root, 1024, 768);
         window.setScene(scene);
         window.show();
     }
 
-    public static void algorithm() {
 
-    }
-
-    public static BorderPane draw() {
+    public static BorderPane draw(int[][] matrix) {
 
         BorderPane root = new BorderPane();
         root.setCenter(graph.getScrollPane());
 
 
-        Layout layout = new RandomLayout(graph);
-        layout.execute();
+        Layout layout = new CircleLayout(graph);
 
-
-        int[][] matrix = {{0, 1, 0, 0, 1},
-                {1, 0, 0, 1, 0},
-                {1, 0, 1, 0, 1},
-                {0, 0, 1, 0, 1}};
         initBaseGraph();
-        //updateGraph(matrix);
+        updateGraph(matrix);
         layout.execute();
 
         return root;
@@ -58,7 +59,7 @@ public class GraphGen extends InputMatrix {
 
     private static void initBaseGraph() {
 
-        //Model model = graph.getModel();
+        Model model = graph.getModel();
 
         graph.beginUpdate();
 
@@ -73,12 +74,12 @@ public class GraphGen extends InputMatrix {
             model.addCell("G" + i, CellType.HEXAGON);
         }
 
+        edges = new Edge[generator][cities];
         for (int i = 0; i < generator; i++) {
             for (int j = 0; j < cities; j++) {
-                model.addEdge("G" + i, "C" + j, 10);
+                edges[i][j] = model.addEdge("G" + i, "C" + j, 10);
             }
         }
-
 //
 //        for (int i = 0; i < generator; i++) {
 //            for (int j = 0; j < cities; j++) {
@@ -108,17 +109,16 @@ public class GraphGen extends InputMatrix {
         int cities = 5;
         int generator = 4;
 
-        for (int i = 0; i < cities; i++) {
-            model.addCell("City_" + i, CellType.CIRCLE);
-        }
-
-        for (int i = 0; i < generator; i++) {
-            model.addCell("Gen_" + i, CellType.HEXAGON);
-        }
 
         for (int i = 0; i < generator; i++) {
             for (int j = 0; j < cities; j++) {
-                if (matrix[i][j] == 1) model.addEdge("City_" + j, "Gen_" + i, 10);
+                if(matrix[i][j] == 0) {
+                    edges[i][j].setStatus(false);
+                }
+                if (matrix[i][j] == 1) {
+                    edges[i][j].setStatus(true);
+                    //model.addEdge("City_" + j, "Gen_" + i, 10);
+                }
             }
         }
 

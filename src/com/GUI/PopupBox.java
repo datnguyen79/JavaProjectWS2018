@@ -189,7 +189,7 @@ public class PopupBox {
 
     public static void aboutBox(){
         Stage window = new Stage();
-        Image image = new Image(PopupBox.class.getResourceAsStream("img/cuteAnt.jpg"));
+        Image image = new Image("com/img/cuteAnt.jpg");
         ImageView imageView = new ImageView(image);
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Instruction");

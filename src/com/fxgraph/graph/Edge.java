@@ -33,14 +33,24 @@ public class Edge extends Pane {
         line.endXProperty().bind( target.layoutXProperty().add( target.getBoundsInParent().getWidth() / 2.0));
         line.endYProperty().bind( target.layoutYProperty().add( target.getBoundsInParent().getHeight() / 2.0));
 
-        weight = new Text();
-
         weight.setText(Double.toString(w));
-
         weight.layoutXProperty().bind(line.endXProperty().subtract(line.endXProperty().subtract(line.startXProperty()).divide(2)));
         weight.layoutYProperty().bind(line.endYProperty().subtract(line.endYProperty().subtract(line.startYProperty()).divide(2)));
 
         getChildren().addAll(line, weight);
+
+    }
+
+    public void setStatus(boolean status){
+        if(weight != null && line != null){
+            if(status){
+                line.setOpacity(1.0);
+                weight.setOpacity(1.0);
+            }else{
+                line.setOpacity(0.0);
+                weight.setOpacity(0.0);
+            }
+        }
 
     }
 

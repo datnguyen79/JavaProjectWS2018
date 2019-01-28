@@ -1,5 +1,6 @@
 package com.fxgraph.graph;
 
+
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +15,6 @@ public class RandomLayout extends Layout{
     Random rnd = new Random();
 
     public RandomLayout(Graph graph) {
-
         this.graph = graph;
 
     }

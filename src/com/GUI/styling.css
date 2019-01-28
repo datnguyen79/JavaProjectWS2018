@@ -21,7 +21,7 @@ and open the template in the editor.
 }
 
 .root{
-    -fx-background-color: #282828;
+    -fx-background-color: #002240;
 }
 
 #labelColor1{
@@ -52,4 +52,47 @@ and open the template in the editor.
 
 #tabBG{
     -fx-background-color :  #052d42;
+}
+
+
+
+
+.menu .label{
+    -fx-text-fill: #d5d9ea;
+}
+
+.menu-item .label {
+    -fx-text-fill : #667377;
+}
+
+.menu-bar{
+    -fx-background-color: #2a2e33;
+}
+
+
+.menu .label:hover, .menu .label:showing{
+    -fx-text-fill: white;
+}
+
+.menu:hover, .menu:showing{
+    -fx-background-color: transparent;
+}
+
+.menu-item{
+    -fx-background-color: #353940;
+    -fx-padding: 2 10 2 10;
+
+}
+
+.menu-item .label{
+    -fx-text-fill: #a8aca6;
+}
+
+.menu-item:hover .label{
+    -fx-text-fill: white;
+}
+
+.context-menu{
+    -fx-background-color: #353940;
+    -fx-border-color: #121a2a;
 }
