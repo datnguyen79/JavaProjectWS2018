@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -242,7 +243,7 @@ public class LayoutGUI  extends InputMatrix{
         HBox bottom2 = new HBox(80);
         //HBox"bottom2" = Button"Create" + Button"Clear" + Button"Close"
         bottom2.setAlignment(Pos.CENTER);
-        bottom2.setPadding( new Insets(10, 10, 10, 10));
+        bottom2.setPadding( new Insets(0, 10, 10, 10));
         Button createButton, clearButton, closeButton;
         createButton = new Button("Create");
         clearButton = new Button("Clear");
@@ -279,15 +280,21 @@ public class LayoutGUI  extends InputMatrix{
     }
 
     public static VBox leftLayout(){
-        /*Main Layout contains: text3, matrixGrid(gridPane)
+        /*Main Layout contains: text3, scrollPane(matrixGrid(gridPane))
          *Section: Left
          *Use in: Border Pane
          */
         VBox left = new VBox(10);
+        ScrollPane wrapMatrix = new ScrollPane();
         Text text3 = new Text(10, 50, "(*) Input Electricity Cost: ");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
-        left.getChildren().addAll(text3, InputMatrix.matrixDisplay());
+
+        wrapMatrix.setContent(InputMatrix.matrixDisplay());
+        wrapMatrix.setPrefSize(500,700);
+
+
+        left.getChildren().addAll(text3, wrapMatrix);
         left.setPadding( new Insets(10, 10, 10, 10));
         return left;
     }
@@ -301,7 +308,12 @@ public class LayoutGUI  extends InputMatrix{
         Text text3 = new Text(10, 50, "Generator State: ");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
-        right.getChildren().addAll(text3, InputMatrix.generatorState());
+
+        ScrollPane wrapGenState = new ScrollPane();
+        wrapGenState.setContent(InputMatrix.generatorState());
+        wrapGenState.setPrefSize(200,700);
+
+        right.getChildren().addAll(text3, wrapGenState);
         right.setPadding( new Insets(10, 10, 10, 10));
         return right;
     }
