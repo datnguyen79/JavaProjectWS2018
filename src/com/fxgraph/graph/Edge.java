@@ -1,9 +1,5 @@
 package com.fxgraph.graph;
 
-<<<<<<< HEAD
-import javafx.scene.Group;
-=======
->>>>>>> ACO
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
