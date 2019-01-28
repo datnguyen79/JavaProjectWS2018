@@ -15,7 +15,7 @@ public class GraphGen extends InputMatrix {
     static Graph graph = new Graph();
     static Model model = graph.getModel();
     private static Edge[][] edges;
-    public static void canvas() {
+    public static void genCanvas() {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
