@@ -100,12 +100,12 @@ public class Model {
 
     }
 
-    public void addEdge( String sourceId, String targetId) {
+    public void addEdge( String sourceId, String targetId, double weight) {
 
         Cell sourceCell = cellMap.get( sourceId);
         Cell targetCell = cellMap.get( targetId);
 
-        Edge edge = new Edge( sourceCell, targetCell);
+        Edge edge = new Edge( sourceCell, targetCell, weight);
 
         addedEdges.add( edge);
 

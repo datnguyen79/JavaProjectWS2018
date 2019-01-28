@@ -8,12 +8,8 @@ import com.fxgraph.graph.Graph;
 
 public class Main extends Application {
 
-
-        Graph graph = new Graph();
         @Override
         public void start(Stage primaryStage) {
-
-            graph = new Graph();
 
             Scene scene = new Scene(LayoutGUI.mainLayout(primaryStage), 840, 720);
             scene.getStylesheets().add(getClass().getResource("styling.css").toExternalForm());

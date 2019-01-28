@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 public class Cell extends Pane {
 
     String cellId;
+    protected double x;
+    protected double y;
 
     List<Cell> children = new ArrayList<>();
     List<Cell> parents = new ArrayList<>();
@@ -20,6 +22,22 @@ public class Cell extends Pane {
 
     public Cell(String cellId) {
         this.cellId = cellId;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getX() {
+        return this.x;
+    }
+
+    public double getY() {
+        return this.y;
     }
 
     public void addCellChild(Cell cell) {

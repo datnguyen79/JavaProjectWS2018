@@ -22,13 +22,15 @@ public class RandomLayout extends Layout{
     public void execute() {
 
         List<Cell> cells = graph.getModel().getAllCells();
-
+        List<Edge> edges = graph.getModel().getAllEdges();
         for (Cell cell : cells) {
 
             double x = rnd.nextDouble() * 1024;
             double y = rnd.nextDouble() * 768;
 
             cell.relocate(x, y);
+            cell.setX(x);
+            cell.setY(y);
 
         }
 
