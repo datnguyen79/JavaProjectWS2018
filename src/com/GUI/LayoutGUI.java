@@ -274,7 +274,6 @@ public class LayoutGUI  extends InputMatrix{
         bottom2.getChildren().addAll(createButton, clearButton, closeButton);
         botTabPane.getTabs().addAll(resizeTab,settingGen);
         bottom.getChildren().addAll(botTabPane, bottom2);
-
         return bottom;
     }
 

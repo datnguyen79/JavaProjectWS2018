@@ -6,8 +6,10 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -19,11 +21,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
+
+
 public class GraphGen extends InputMatrix {
 
     static Graph graph = new Graph();
     static Model model = graph.getModel();
     private static Edge[][] edges;
+
     public static void genCanvas() {
         Stage window = new Stage();
 
@@ -31,7 +36,7 @@ public class GraphGen extends InputMatrix {
         window.setTitle("Graph drawing...");
 
 
-        int[][] matrix = {{1,1,0,1,0},{0,1,0,0,1},{1,0,0,1,0},{0,0,0,1,1}};
+        int[][] matrix = {{1, 1, 0, 1, 0}, {0, 1, 0, 0, 1}, {1, 0, 0, 1, 0}, {0, 0, 0, 1, 1}};
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -49,7 +54,8 @@ public class GraphGen extends InputMatrix {
         //root.getChildren().addAll(draw(matrix));
         root.setLeft(settingBar());
         root.setCenter(draw(matrix));
-
+        root.setBottom(hBottem());
+//////////////////////////////////////////////////
         Scene scene = new Scene(root, 1024, 768);
         window.setScene(scene);
         window.show();
@@ -116,7 +122,7 @@ public class GraphGen extends InputMatrix {
     }
 
 
-    private static void updateGraph( int[][] matrix){
+    private static void updateGraph(int[][] matrix) {
 
         graph.beginUpdate();
 
@@ -125,7 +131,7 @@ public class GraphGen extends InputMatrix {
 
         for (int i = 0; i < generator; i++) {
             for (int j = 0; j < cities; j++) {
-                if(matrix[i][j] == 0) {
+                if (matrix[i][j] == 0) {
                     edges[i][j].setStatus(false);
                 }
                 if (matrix[i][j] == 1) {
@@ -138,9 +144,13 @@ public class GraphGen extends InputMatrix {
         graph.endUpdate();
     }
 
-    private static VBox settingBar(){
+    private static VBox settingBar() {
+        //Title
+        Text title = new Text();
+        title.setText("Setting");
+        title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         //slider
-        Slider sliderAlpha = new Slider(0, 100, 0);
+        Slider sliderAlpha = new Slider(0, 100, 50);
         sliderAlpha.setBlockIncrement(10);
         sliderAlpha.setShowTickLabels(true);
         sliderAlpha.setShowTickMarks(true);
@@ -170,9 +180,10 @@ public class GraphGen extends InputMatrix {
         root.setSpacing(200);
         root.setPadding(new Insets(15, 20, 10, 10));
         //vbox
-        VBox v1 = new VBox();
-        v1.setSpacing(10);
-        // v1.setPadding(new Insets(20));
+        VBox leftLayout = new VBox();
+        leftLayout.setSpacing(50);
+        leftLayout.setPadding(new Insets(20, 20, 20, 20));
+        // leftLayout.setPadding(new Insets(20));
         //hbox
         HBox h1 = new HBox();
         h1.setSpacing(20);
@@ -184,6 +195,8 @@ public class GraphGen extends InputMatrix {
         h4.setSpacing(20);
         HBox h5 = new HBox();
         h5.setSpacing(20);
+        HBox hButton = new HBox();
+        hButton.setSpacing(20);
 
 
         // Text
@@ -209,7 +222,7 @@ public class GraphGen extends InputMatrix {
         text5.setTextAlignment(TextAlignment.CENTER);
         //TextField vs slider
 
-        TextField alphaInput = new TextField();
+        Label alphaInput = new Label("" + sliderAlpha.getValue());
         alphaInput.setPrefWidth(50);
 
         sliderAlpha.valueProperty().addListener(new ChangeListener<Number>() {
@@ -217,22 +230,24 @@ public class GraphGen extends InputMatrix {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
+                sliderAlpha.setValue(newValue.intValue());
                 alphaInput.setText(String.valueOf(newValue.intValue()));
             }
         });
 
-        TextField betaInput = new TextField();
+        Label betaInput = new Label("" + sliderBeta.getValue());
         betaInput.setPrefWidth(50);
 
         sliderBeta.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
-
+                sliderBeta.setValue(newValue.intValue());
                 betaInput.setText(String.valueOf(newValue.intValue()));
             }
         });
-        TextField aInput = new TextField();
+
+        Label aInput = new Label("" + slidera.getValue());
         aInput.setPrefWidth(50);
 
         slidera.valueProperty().addListener(new ChangeListener<Number>() {
@@ -240,11 +255,12 @@ public class GraphGen extends InputMatrix {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
+                slidera.setValue(newValue.intValue());
                 aInput.setText(String.valueOf(newValue.intValue()));
             }
         });
 
-        TextField bInput = new TextField();
+        Label bInput = new Label("" + sliderb.getValue());
         bInput.setPrefWidth(50);
 
         sliderb.valueProperty().addListener(new ChangeListener<Number>() {
@@ -252,11 +268,12 @@ public class GraphGen extends InputMatrix {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
+                sliderb.setValue(newValue.intValue());
                 bInput.setText(String.valueOf(newValue.intValue()));
             }
         });
 
-        TextField QInput = new TextField();
+        Label QInput = new Label("" + sliderQ.getValue());
         QInput.setPrefWidth(50);
 
         sliderQ.valueProperty().addListener(new ChangeListener<Number>() {
@@ -264,30 +281,66 @@ public class GraphGen extends InputMatrix {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
+                sliderQ.setValue(newValue.intValue());
                 QInput.setText(String.valueOf(newValue.intValue()));
             }
         });
         //button
         Button update = new Button();
+        update.setPrefSize(80, 30);
         update.setText("Apply");
         update.setOnAction(e -> {
             System.out.println(alphaInput.getText());
             System.out.println(betaInput.getText());
         });
 
+        Button clear = new Button();
+        clear.setPrefSize(80, 30);
+        clear.setText("Clear");
+        clear.setOnAction(e -> {
+            sliderAlpha.setValue(0);
+            sliderBeta.setValue(0);
+            slidera.setValue(0);
+            sliderb.setValue(0);
+            sliderQ.setValue(0);
+        });
         //scene
         h1.getChildren().addAll(text1, sliderAlpha, alphaInput);
         h2.getChildren().addAll(text2, sliderBeta, betaInput);
         h3.getChildren().addAll(text3, slidera, aInput);
         h4.getChildren().addAll(text4, sliderb, bInput);
         h5.getChildren().addAll(text5, sliderQ, QInput);
-        v1.getChildren().addAll(h1, h2, h3, h4, h5, update);
+        hButton.getChildren().addAll(update, clear);
 
-        v1.setPadding( new Insets(20,20,20,20));
+        leftLayout.getChildren().addAll(title, h1, h2, h3, h4, h5, hButton);
 
-        //root.getChildren().addAll(v1);
 
-        return v1;
+        //root.getChildren().addAll(leftLayout);
+
+        return leftLayout;
     }
+
+    private static HBox hBottem() {
+        HBox bottemLayout = new HBox();
+        bottemLayout.setSpacing(250);
+        bottemLayout.setPadding(new Insets(50, 40, 100, 450));
+        //Button
+        Button start = new Button();
+        start.setPrefSize(80, 30);
+        start.setText("Start");
+
+        Button pause = new Button();
+        pause.setPrefSize(80, 30);
+        pause.setText("Pause");
+
+        Button close = new Button();
+        close.setPrefSize(80, 30);
+        close.setText("Close");
+
+        bottemLayout.getChildren().addAll(start, pause, close);
+        return bottemLayout;
+    }
+
+
 }
 
