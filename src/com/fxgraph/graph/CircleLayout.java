@@ -15,7 +15,7 @@ public class CircleLayout extends Layout{
 
         List<Cell> cells = graph.getModel().getAllCells();
         List<Edge> edges = graph.getModel().getAllEdges();
-        int centerX = 1024/2;
+        int centerX = 800/2;
         int centerY = 768/2;
         int n = cells.size();
         int radius = 300;
