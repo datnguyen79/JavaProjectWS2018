@@ -66,7 +66,7 @@ public class Graph {
 
         // enable dragging of cells
         for (Cell cell : model.getAddedCells()) {
-            mouseGestures.makeDraggable(cell);
+            mouseGestures.makeInteractable(cell);
         }
 
         // every cell must have a parent, if it doesn't, then the graphParent is
