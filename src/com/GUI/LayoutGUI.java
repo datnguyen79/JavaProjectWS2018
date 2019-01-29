@@ -135,7 +135,7 @@ public class LayoutGUI  extends InputMatrix{
 
         ////Text Section
         Text text1, text2;
-        text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSON COST");
+        text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSION COST");
         text1.setId("textColor1");
         text2 = new Text(10, 50, "USING ANT COLONY OPTIMIZATION(ACO)");
         text2.setId("textColor1");
@@ -202,6 +202,7 @@ public class LayoutGUI  extends InputMatrix{
             row = Integer.parseInt(numGen.getText());
             col = Integer.parseInt(numDes.getText());
             root.setLeft(leftLayout());
+            root.setRight(rightLayout());
         });
         fillButton.setOnAction(e -> {
             for(int i = 0;  i < (row>=preRow?preRow:row); i++){

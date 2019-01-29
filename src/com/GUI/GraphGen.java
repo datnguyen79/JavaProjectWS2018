@@ -26,7 +26,6 @@ import javafx.util.Duration;
 public class GraphGen extends InputMatrix {
 
     static Graph graph = new Graph();
-    static Model model = graph.getModel();
     private static Edge[][] edges;
 
     public static void genCanvas() {
@@ -55,8 +54,8 @@ public class GraphGen extends InputMatrix {
         root.setLeft(settingBar());
         root.setCenter(draw(matrix));
         root.setBottom(hBottem());
-//////////////////////////////////////////////////
-        Scene scene = new Scene(root, 1024, 768);
+
+        Scene scene = new Scene(root, 1200, 800);
         window.setScene(scene);
         window.show();
     }

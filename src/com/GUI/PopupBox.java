@@ -27,8 +27,9 @@ public class PopupBox {
         window.setTitle("Warning");
         window.setMinWidth(300);
 
-        Label label = new Label();
-        label.setText("Are you sure you want to exit");
+        Text text = new Text();
+        text.setText("Are you sure you want to exit?");
+        text.setId("textColor2");
 
         //Create two button yes and no
         Button yesButton = new Button("Yes");
@@ -46,7 +47,7 @@ public class PopupBox {
         });
         //Pane components
         VBox layout = new VBox();
-        layout.getChildren().addAll(label);
+        layout.getChildren().addAll(text);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(15, 12, 15, 12));
 
@@ -61,6 +62,7 @@ public class PopupBox {
 
         //Scene
         Scene scene = new Scene(borderPane);
+        scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.showAndWait();
         //Close window if user click "yes"
@@ -106,6 +108,7 @@ public class PopupBox {
         layout.getChildren().addAll(text, textArea,helpfulText,hbox);
 
         Scene scene = new Scene(layout);
+        scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.showAndWait();
         return triggered;
@@ -192,10 +195,10 @@ public class PopupBox {
         Image image = new Image("com/img/cuteAnt.jpg");
         ImageView imageView = new ImageView(image);
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Instruction");
+        window.setTitle("Introduction");
 
         Text text1, text2, text3, text4;
-        text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSON COST(ACO)");
+        text1 = new Text(10, 50, "MINIMIZE ELECTRICITY TRANSMISSION COST(ACO)");
         text2 = new Text(10, 50, "Frankfurt University of Applied Science\n Java Project - Winter Semester 2018");
         text3 = new Text(10, 50, "Team 6:");
         text4 = new Text(10, 50, "-Chi Minh Truong\n-Ho Tat Dat Nguyen\n-Khac Nhu Phung\n-Ngoc Thach Le");
@@ -203,6 +206,10 @@ public class PopupBox {
         text2.setFont(new Font(18));
         text3.setFont(new Font(18));
         text4.setFont(new Font(18));
+        text1.setId("textColor2");
+        text2.setId("textColor2");
+        text3.setId("textColor2");
+        text4.setId("textColor2");
 
         Button okButton = new Button("Ok");
         okButton.setPrefSize(80, 30);
@@ -232,7 +239,8 @@ public class PopupBox {
         borderPane.setTop(layout1);
 
         //Scene
-        Scene scene = new Scene(borderPane, 500, 510);
+        Scene scene = new Scene(borderPane, 520, 520);
+        scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.showAndWait();
     }

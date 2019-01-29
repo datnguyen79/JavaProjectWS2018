@@ -51,13 +51,13 @@ and open the template in the editor.
   -fx-background-color: #535353;
   -fx-border: none;
   -fx-border-radius: 15px;
-  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+
 }
 
 .button:hover {-fx-background-color: #3C3C3C}
 
-.button:active {
-  -fx-background-color: #3e8e41;
+.button:pressed {
+  -fx-background-color: #2B2B2B;
   -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
 

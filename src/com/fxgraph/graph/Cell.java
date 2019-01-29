@@ -65,6 +65,7 @@ public class Cell extends Pane {
         text.setFont(new Font(16));
         text.setStyle("-fx-font-weight: bold");
 
+
         this.shape = shape;
 
         getChildren().addAll(shape,text);
