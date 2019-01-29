@@ -20,6 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.text.DecimalFormat;
+
 
 
 
@@ -54,7 +56,7 @@ public class GraphGen extends InputMatrix {
         //root.getChildren().addAll(draw(matrix));
         root.setLeft(settingBar());
         root.setCenter(draw(matrix));
-        root.setBottom(hBottem());
+        root.setBottom(hBottem(window));
 //////////////////////////////////////////////////
         Scene scene = new Scene(root, 1024, 768);
         window.setScene(scene);
@@ -150,30 +152,20 @@ public class GraphGen extends InputMatrix {
         title.setText("Setting");
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         //slider
-        Slider sliderAlpha = new Slider(0, 100, 50);
-        sliderAlpha.setBlockIncrement(10);
-        sliderAlpha.setShowTickLabels(true);
-        sliderAlpha.setShowTickMarks(true);
+        Slider sliderAlpha = new Slider(1, 100, 1);
+        sliderAlpha.setBlockIncrement(1);
 
-        Slider sliderBeta = new Slider(0, 100, 0);
-        sliderBeta.setBlockIncrement(10);
-        sliderBeta.setShowTickLabels(true);
-        sliderBeta.setShowTickMarks(true);
+        Slider sliderBeta = new Slider(1, 100, 1);
+        sliderBeta.setBlockIncrement(1);
 
-        Slider slidera = new Slider(0, 100, 0);
-        slidera.setBlockIncrement(10);
-        slidera.setShowTickLabels(true);
-        slidera.setShowTickMarks(true);
+        Slider sliderE = new Slider(0.1, 0.99, 0);
+        sliderE.setBlockIncrement(0.01);
 
-        Slider sliderb = new Slider(0, 100, 0);
-        sliderb.setBlockIncrement(10);
-        sliderb.setShowTickLabels(true);
-        sliderb.setShowTickMarks(true);
+        Slider sliderAnt = new Slider(0.1, 0.9, 0.1);
+        sliderAnt.setBlockIncrement(0.1);
 
-        Slider sliderQ = new Slider(0, 100, 0);
-        sliderQ.setBlockIncrement(10);
-        sliderQ.setShowTickLabels(true);
-        sliderQ.setShowTickMarks(true);
+        Slider sliderQ = new Slider(1, 1000, 1);
+        sliderQ.setBlockIncrement(1);
         //box
         HBox root = new HBox();
 
@@ -187,16 +179,21 @@ public class GraphGen extends InputMatrix {
         //hbox
         HBox h1 = new HBox();
         h1.setSpacing(20);
+        h1.setAlignment(Pos.CENTER_RIGHT);
         HBox h2 = new HBox();
+        h2.setAlignment(Pos.CENTER_RIGHT);
         h2.setSpacing(20);
         HBox h3 = new HBox();
         h3.setSpacing(20);
+        h3.setAlignment(Pos.CENTER_RIGHT);
         HBox h4 = new HBox();
         h4.setSpacing(20);
+        h4.setAlignment(Pos.CENTER_RIGHT);
         HBox h5 = new HBox();
         h5.setSpacing(20);
+        h5.setAlignment(Pos.CENTER_RIGHT);
         HBox hButton = new HBox();
-        hButton.setSpacing(20);
+        hButton.setSpacing(40);
 
 
         // Text
@@ -205,21 +202,25 @@ public class GraphGen extends InputMatrix {
         text1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text1.setTextAlignment(TextAlignment.CENTER);
         Text text2 = new Text();
-        text2.setText("Beta  ");
+        text2.setText("Beta");
         text2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text2.setTextAlignment(TextAlignment.CENTER);
         Text text3 = new Text();
-        text3.setText("a        ");
+        text3.setText("Evaporation");
         text3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text3.setTextAlignment(TextAlignment.CENTER);
         Text text4 = new Text();
-        text4.setText("m       ");
+        text4.setText("% of Ant");
         text4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text4.setTextAlignment(TextAlignment.CENTER);
         Text text5 = new Text();
-        text5.setText("Q        ");
+        text5.setText("Q");
         text5.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text5.setTextAlignment(TextAlignment.CENTER);
+        //FORMAT
+        DecimalFormat df = new DecimalFormat("0.##");
+        DecimalFormat df1 = new DecimalFormat("0.#");
+
         //TextField vs slider
 
         Label alphaInput = new Label("" + sliderAlpha.getValue());
@@ -247,29 +248,29 @@ public class GraphGen extends InputMatrix {
             }
         });
 
-        Label aInput = new Label("" + slidera.getValue());
-        aInput.setPrefWidth(50);
+        Label EInput = new Label("" + sliderE.getValue());
+        EInput.setPrefWidth(50);
 
-        slidera.valueProperty().addListener(new ChangeListener<Number>() {
+        sliderE.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
-                slidera.setValue(newValue.intValue());
-                aInput.setText(String.valueOf(newValue.intValue()));
+                sliderE.setValue(Double.parseDouble(df.format(newValue)));
+                EInput.setText(df.format(newValue));
             }
         });
 
-        Label bInput = new Label("" + sliderb.getValue());
-        bInput.setPrefWidth(50);
+        Label AntInput = new Label("" + sliderAnt.getValue());
+        AntInput.setPrefWidth(50);
 
-        sliderb.valueProperty().addListener(new ChangeListener<Number>() {
+        sliderAnt.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
 
-                sliderb.setValue(newValue.intValue());
-                bInput.setText(String.valueOf(newValue.intValue()));
+                sliderAnt.setValue(Double.parseDouble(df1.format(newValue)));
+                AntInput.setText(df1.format(newValue));
             }
         });
 
@@ -288,10 +289,23 @@ public class GraphGen extends InputMatrix {
         //button
         Button update = new Button();
         update.setPrefSize(80, 30);
-        update.setText("Apply");
+        update.setText("Run");
         update.setOnAction(e -> {
-            System.out.println(alphaInput.getText());
-            System.out.println(betaInput.getText());
+            if(update.getText()=="Run"){
+//            System.out.println(sliderE.getValue());
+//            System.out.println(alphaInput.getText());
+//            System.out.println(betaInput.getText());
+//            System.out.println(EInput.getText());
+//            System.out.println(AntInput.getText());
+//            System.out.println((QInput.getText()));
+                System.out.println("Cai lon");
+                update.setText("Stop");
+            //
+            }
+            else {
+                System.out.println("Con cac");
+                update.setText("Run");
+            }
         });
 
         Button clear = new Button();
@@ -300,18 +314,18 @@ public class GraphGen extends InputMatrix {
         clear.setOnAction(e -> {
             sliderAlpha.setValue(0);
             sliderBeta.setValue(0);
-            slidera.setValue(0);
-            sliderb.setValue(0);
+            sliderE.setValue(0);
+            sliderAnt.setValue(0);
             sliderQ.setValue(0);
         });
         //scene
         h1.getChildren().addAll(text1, sliderAlpha, alphaInput);
         h2.getChildren().addAll(text2, sliderBeta, betaInput);
-        h3.getChildren().addAll(text3, slidera, aInput);
-        h4.getChildren().addAll(text4, sliderb, bInput);
+        h3.getChildren().addAll(text3, sliderE, EInput);
+        h4.getChildren().addAll(text4, sliderAnt, AntInput);
         h5.getChildren().addAll(text5, sliderQ, QInput);
         hButton.getChildren().addAll(update, clear);
-
+        hButton.setAlignment(Pos.CENTER);
         leftLayout.getChildren().addAll(title, h1, h2, h3, h4, h5, hButton);
 
 
@@ -320,24 +334,27 @@ public class GraphGen extends InputMatrix {
         return leftLayout;
     }
 
-    private static HBox hBottem() {
+    private static HBox hBottem(Stage window ) {
         HBox bottemLayout = new HBox();
         bottemLayout.setSpacing(250);
-        bottemLayout.setPadding(new Insets(50, 40, 100, 450));
+        bottemLayout.setPadding(new Insets(30, 40, 100, 450));
         //Button
-        Button start = new Button();
-        start.setPrefSize(80, 30);
-        start.setText("Start");
-
-        Button pause = new Button();
-        pause.setPrefSize(80, 30);
-        pause.setText("Pause");
+//        Button start = new Button();
+//        start.setPrefSize(80, 30);
+//        start.setText("Start");
+//
+//        Button pause = new Button();
+//        pause.setPrefSize(80, 30);
+//        pause.setText("Pause");
 
         Button close = new Button();
         close.setPrefSize(80, 30);
         close.setText("Close");
 
-        bottemLayout.getChildren().addAll(start, pause, close);
+        close.setOnAction(e->{
+            PopupBox.confirmBox(window);
+        });
+        bottemLayout.getChildren().addAll(close);
         return bottemLayout;
     }
 
