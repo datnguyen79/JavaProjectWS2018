@@ -78,4 +78,6 @@ public class Cell extends Pane {
     public String getCellId() {
         return cellId;
     }
+
+    public void setState() {};
 }

@@ -78,13 +78,13 @@ public class Model {
         switch (type) {
 
             case CIRCLE:
-                CircleCell rectangleCell = new CircleCell(id);
-                addCell(rectangleCell);
+                CircleCell circleCell = new CircleCell(id);
+                addCell(circleCell);
                 break;
 
             case HEXAGON:
-                HexagonCell circleCell = new HexagonCell(id);
-                addCell(circleCell);
+                HexagonCell hexagonCell = new HexagonCell(id);
+                addCell(hexagonCell);
                 break;
 
             default:
