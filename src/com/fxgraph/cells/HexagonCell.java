@@ -6,7 +6,6 @@ import javafx.scene.shape.Polygon;
 import com.fxgraph.graph.Cell;
 
 public class HexagonCell extends Cell {
-    static boolean state;
 
     private boolean state;
     private Polygon view = new Polygon( 30,3,10,3,0,20,10,37,30,37,40,20);
