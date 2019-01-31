@@ -8,6 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 
+import com.GUI.ToggleSwitch;
+
+import java.util.ArrayList;
+
 public class InputMatrix {
     //Default matrix size
     static int row = 6, col = 7;
@@ -69,7 +73,9 @@ public class InputMatrix {
         grid.setHgap(5);
         grid.setPadding( new Insets(20, 20, 20, 20));
 
-        RadioButton[][] buttonState = new RadioButton[row][1];
+        //RadioButton[][] buttonState = new RadioButton[row][1];
+        ArrayList<ToggleSwitch> switches = new ArrayList<>();
+        //ToggleSwitch toggleSwitch = new ToggleSwitch();
 
         for(int i = 0; i < row+1; i++){
             for(int j = 0;  j < 2; j++){
@@ -91,7 +97,7 @@ public class InputMatrix {
                         grid.getChildren().add(lb);
                     }
                     else if(i == 0 && j == 1){
-                        Label onOff = new Label("ON");
+                        Label onOff = new Label("State");
                         onOff.setPadding( new Insets(5, 30, 5, 30));
                         onOff.setFont(new Font("Arial", 18));
                         onOff.setAlignment(Pos.CENTER);
@@ -108,19 +114,22 @@ public class InputMatrix {
                      */
 
                     // Declare the button
-                    buttonState[i-1][j-1] = new RadioButton();
+                    //buttonState[i-1][j-1] = new RadioButton();
+                    ToggleSwitch tSwitch = new ToggleSwitch();
+                    switches.add(tSwitch);
                     //Set alignment for the button
-                    buttonState[i-1][j-1].setPrefHeight(50);
-                    buttonState[i-1][j-1].setPrefWidth(50);
-                    buttonState[i-1][j-1].setAlignment(Pos.CENTER);
-                    buttonState[i-1][j-1].setPadding( new Insets(5, 30, 5, 30));
+                    //buttonState[i-1][j-1].setPrefHeight(50);
+                    //buttonState[i-1][j-1].setPrefWidth(50);
+                    //buttonState[i-1][j-1].setAlignment(Pos.CENTER);
+                    //buttonState[i-1][j-1].setPadding( new Insets(5, 30, 5, 30));
                     //buttonState[i-1][j-1].setSelected(true);
+                    tSwitch.setAlignment(Pos.CENTER);
 
                     //All generators are turned on by DEFAUFT
-                    if(j == 1) buttonState[i-1][j-1].setSelected(true);;
-                    GridPane.setConstraints(buttonState[i-1][j-1],j,i);
-
-                    grid.getChildren().add(buttonState[i-1][j-1]);
+                    //if(j == 1) buttonState[i-1][j-1].setSelected(true);;
+                    //GridPane.setConstraints(buttonState[i-1][j-1],j,i);
+                    GridPane.setConstraints(tSwitch,j,i);
+                    grid.getChildren().add(tSwitch);
                 }
             }
         }

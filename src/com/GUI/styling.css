@@ -8,6 +8,11 @@ and open the template in the editor.
     Author     : Ho Tat Dat Nguyen
 */
 
+.label{
+    -fx-text-fill: #c6c6c6;
+
+}
+
 
 #textColor1 {
     -fx-fill:  #C6C6C6;
@@ -124,6 +129,8 @@ and open the template in the editor.
 .scroll-pane{
    -fx-background-color: transparent;
 }
+
+
 
 .menu .label{
     -fx-text-fill: #d5d9ea;

@@ -36,8 +36,12 @@ public class GraphGen extends InputMatrix {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Graph drawing...");
 
-
-        int[][] matrix = {{1, 1, 0, 1, 0}, {0, 1, 0, 0, 1}, {1, 0, 0, 1, 0}, {0, 0, 0, 1, 1}};
+        int[][] matrix = {
+                {1, 1, 0, 1, 0},
+                {0, 1, 0, 0, 1},
+                {1, 0, 0, 1, 0},
+                {0, 0, 0, 1, 1}
+        };
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -52,13 +56,13 @@ public class GraphGen extends InputMatrix {
         timeline.playFromStart();
 
         BorderPane root = new BorderPane();
-        //root.getChildren().addAll(draw(matrix));
+
         root.setLeft(settingBar());
         root.setCenter(draw(matrix));
-
         root.setBottom(hBottem(window));
 
-        Scene scene = new Scene(root, 1024, 768);
+        Scene scene = new Scene(root, 1200, 800);
+        scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.show();
     }
@@ -70,11 +74,10 @@ public class GraphGen extends InputMatrix {
         root.setMinSize(800, 768);
         root.setCenter(graph.getScrollPane());
 
-
         Layout layout = new CircleLayout(graph);
 
         initBaseGraph();
-        updateGraph(matrix);
+        //updateGraph(matrix);
         layout.execute();
 
         return root;
@@ -83,6 +86,8 @@ public class GraphGen extends InputMatrix {
     private static void initBaseGraph() {
 
         Model model = graph.getModel();
+        //Model model = new Model();
+        //graph.getModel();
 
         graph.beginUpdate();
 
@@ -103,22 +108,6 @@ public class GraphGen extends InputMatrix {
                 edges[i][j] = model.addEdge("G" + i, "C" + j, 10);
             }
         }
-//
-//        for (int i = 0; i < generator; i++) {
-//            for (int j = 0; j < cities; j++) {
-//                if (matrix[i][j] == 1) {
-//                    model.addEdge("G" + i, "D" + j, 10);
-//                }
-//            }
-//        }
-
-//        for(int i = generator; i < cities; i++){
-//            for(int j = 0; j < cities; j++) {
-//                if(matrix[i][j] == 1){
-//                    model.addEdge("D"+i,"D"+j);
-//                }
-//            }
-//        }
 
         graph.endUpdate();
     }
@@ -151,6 +140,8 @@ public class GraphGen extends InputMatrix {
         Text title = new Text();
         title.setText("Setting");
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        title.setId("textColor1");
+
         //slider
         Slider sliderAlpha = new Slider(1, 100, 1);
         sliderAlpha.setBlockIncrement(1);
@@ -201,22 +192,32 @@ public class GraphGen extends InputMatrix {
         text1.setText("Alpha");
         text1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text1.setTextAlignment(TextAlignment.CENTER);
+        text1.setId("textColor2");
+
         Text text2 = new Text();
         text2.setText("Beta");
         text2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text2.setTextAlignment(TextAlignment.CENTER);
+        text2.setId("textColor2");
+
         Text text3 = new Text();
         text3.setText("Evaporation");
         text3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text3.setTextAlignment(TextAlignment.CENTER);
+        text3.setId("textColor2");
+
         Text text4 = new Text();
         text4.setText("% of Ant");
         text4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text4.setTextAlignment(TextAlignment.CENTER);
+        text4.setId("textColor2");
+
         Text text5 = new Text();
         text5.setText("Q");
         text5.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text5.setTextAlignment(TextAlignment.CENTER);
+        text5.setId("textColor2");
+
         //FORMAT
         DecimalFormat df = new DecimalFormat("0.##");
         DecimalFormat df1 = new DecimalFormat("0.#");

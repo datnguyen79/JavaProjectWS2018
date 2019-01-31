@@ -3,6 +3,7 @@ package com.GUI;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,11 +29,12 @@ public class LayoutGUI  extends InputMatrix{
     // Main layout
     private static BorderPane root = new BorderPane();
     // Matrix to hold old value and restore it later
-    static double preMatrix[][] = new double[row][col];
-    static int preRow, preCol;
+    private static double[][] preMatrix = new double[row][col];
+    private static int preRow, preCol;
     // Text field to hold the number of Generator and Destination
-    static TextField numDes = new TextField();
-    static TextField numGen = new TextField();
+    private static TextField numDes = new TextField();
+    private static TextField numGen = new TextField();
+    private static boolean turnOnCSS;
 
     private static void saveTextToFile(String content, File file) {
         try {
@@ -45,32 +47,42 @@ public class LayoutGUI  extends InputMatrix{
         }
     }
 
-    public static VBox topLayout(){
+    private static VBox topLayout(){
         Stage window = new Stage();
         /*Layout contains: Menu Bar, VBox(Text1 + Text2)
          *Section: Top
          *Use in: Border Pane
          */
-        //
         //File Loader
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        //Menu Section
+        ////////////////////////// MenuBar Section ////////////////////////////
         MenuBar menuBar = new MenuBar();
 
         Menu file = new Menu("File");
         Menu help = new Menu("Help");
+        Menu view = new Menu("View");
 
         MenuItem menuOpen = new MenuItem("Open...");
         MenuItem menuSave = new MenuItem("Save");
         MenuItem menuAbout = new MenuItem("About");
+        RadioMenuItem menuDefault = new RadioMenuItem("Default");
+        RadioMenuItem menuDark = new RadioMenuItem("Dark Theme");
+        menuDefault.setSelected(true);
+
         SeparatorMenuItem separator = new SeparatorMenuItem();
+        SeparatorMenuItem separator2 = new SeparatorMenuItem();
+        ToggleGroup group = new ToggleGroup();
+        menuDefault.setToggleGroup(group);
+        menuDark.setToggleGroup(group);
 
         file.getItems().add(menuOpen);
         file.getItems().add(separator);
         file.getItems().add(menuSave);
         help.getItems().add(menuAbout);
+        view.getItems().addAll(menuDefault,separator2,menuDark);
+
         ////Set action for each component in the menu bar
 
         ///Open action
@@ -95,7 +107,7 @@ public class LayoutGUI  extends InputMatrix{
                 String text = textArea.getText();
                 String[] str1 = text.split("\n");
                 String[] str0 = str1[0].split(" ");
-                int matrix[][] = new int[row][col];
+                int[][] matrix = new int[row][col];
                 row = str1.length;
                 col = str0.length;
                 root.setLeft(leftLayout());
@@ -128,10 +140,18 @@ public class LayoutGUI  extends InputMatrix{
                 saveTextToFile(InputMatrix.matrixToText(InputMatrix.getMatrixValue(), row, col), file1);
             }
         });
+        menuDefault.setOnAction(e -> {
+            turnOnCSS = false;
+        });
+        menuDark.setOnAction(e -> {
+            turnOnCSS = true;
+        });
+
 
         ///Gathering components of menu bar
-        menuBar.getMenus().addAll(file,help);
+        menuBar.getMenus().addAll(file,view,help);
 
+        //////////////// End of MenuBar section /////////////////////////
 
         ////Text Section
         Text text1, text2;
@@ -143,14 +163,15 @@ public class LayoutGUI  extends InputMatrix{
         text2.setFont(new Font(24));
 
         VBox top = new VBox(10);
-        //Adding components
+
+        //Adding components for the Top section
         top.getChildren().addAll(menuBar, text1, text2);
         top.setAlignment(Pos.TOP_CENTER);
         top.setPadding( new Insets(0, 0, 10, 0));
         return top;
     }
 
-    public static VBox botLayout(Stage stage) {
+    private static VBox botLayout(Stage stage) {
 
         /*Main Layout contains:
          *Section: Bottom
@@ -162,7 +183,9 @@ public class LayoutGUI  extends InputMatrix{
         ///Bottom 1 Section
         VBox tab1 = new VBox(10);
         tab1.setPadding( new Insets(10, 10, 10, 10));
-        //VBox"bottom1" = HBox"LabelnButton1"(Label"des" + textField"numDes") + HBox"LabelnButton2"(Label"gen" + textField"numGen")
+
+        // Structure of the Bottom 1:
+        // VBox"bottom1" = HBox"LabelnButton1"(Label"des" + textField"numDes") + HBox"LabelnButton2"(Label"gen" + textField"numGen")
         HBox LabelnText1, LabelnText2;
         LabelnText1 = new HBox(20);
         LabelnText2 = new HBox(20);
@@ -279,7 +302,7 @@ public class LayoutGUI  extends InputMatrix{
         return bottom;
     }
 
-    public static VBox leftLayout(){
+    private static VBox leftLayout(){
         /*Main Layout contains: text3, scrollPane(matrixGrid(gridPane))
          *Section: Left
          *Use in: Border Pane
@@ -290,6 +313,10 @@ public class LayoutGUI  extends InputMatrix{
         text3.setFont(new Font(20));
         text3.setId("textColor2");
 
+        /*Wrap the gridPane by the ScrollPane
+         * So when the size of the GridPane increase
+         * The window size will not become extremely big
+         */
         wrapMatrix.setContent(InputMatrix.matrixDisplay());
         wrapMatrix.setPrefSize(500,700);
 
@@ -299,16 +326,20 @@ public class LayoutGUI  extends InputMatrix{
         return left;
     }
 
-    public static VBox rightLayout(){
+    private static VBox rightLayout(){
         /*Main Layout contains: text3, matrixGrid(gridPane)
          *Section: Right
-         *Use in: Border Pane
+         *Use in: Border Pane root
          */
         VBox right = new VBox(10);
         Text text3 = new Text(10, 50, "Generator State: ");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
 
+        /*Wrap the gridPane by the ScrollPane
+        * So when the size of the GridPane increase
+        * The window size will not become extremely big
+        */
         ScrollPane wrapGenState = new ScrollPane();
         wrapGenState.setContent(InputMatrix.generatorState());
         wrapGenState.setPrefSize(200,700);
@@ -318,13 +349,16 @@ public class LayoutGUI  extends InputMatrix{
         return right;
     }
 
-    public static BorderPane mainLayout(Stage stage){
+    public static Scene mainLayout(Stage stage){
         root.setTop(LayoutGUI.topLayout());
         root.setLeft(LayoutGUI.leftLayout());
         root.setRight(LayoutGUI.rightLayout());
         root.setBottom(LayoutGUI.botLayout(stage));
 
-        return root;
+        Scene scene = new Scene(root, 840, 720);
+        scene.getStylesheets().add("com/GUI/Styling.css");
+
+        return scene;
     }
 }
 

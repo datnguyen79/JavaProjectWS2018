@@ -21,7 +21,7 @@ public class PopupBox {
     private static boolean answer;
     private static boolean triggered;
 
-    public static void confirmBox(Stage stage){
+    public static boolean confirmBox(Stage stage){
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Warning");
@@ -67,6 +67,7 @@ public class PopupBox {
         window.showAndWait();
         //Close window if user click "yes"
         if(answer) stage.close();
+        return answer;
     }
 
     public static boolean previewBox(TextArea textArea){
