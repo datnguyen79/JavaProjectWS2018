@@ -15,10 +15,10 @@ public class CircleLayout extends Layout{
 
         List<Cell> cells = graph.getModel().getAllCells();
         List<Edge> edges = graph.getModel().getAllEdges();
-        int centerX = 800/2;
-        int centerY = 768/2;
+        int centerX = 350;
+        int centerY = 350;
         int n = cells.size();
-        int radius = 300;
+        int radius = 350;
         double alpha = 2*Math.PI / n;
         for(int i = 0; i < n; i++){
             int x = centerX + (int) (Math.cos(i * alpha - Math.PI / 2) * radius);

@@ -25,7 +25,10 @@ public class Edge extends Pane {
         line = new Line();
         weight = new Text();
 
+        //Styling for edge
         line.setStrokeWidth(3);
+        line.setStyle("-fx-stroke: #c6c6c6");
+        weight.setId("textWithStroke");
 
         line.startXProperty().bind( source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
         line.startYProperty().bind( source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));

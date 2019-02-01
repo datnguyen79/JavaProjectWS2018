@@ -285,7 +285,7 @@ public class LayoutGUI  extends InputMatrix{
             InputMatrix.clearMatrixValue();
         });
         createButton.setOnAction(e ->{
-            GraphGen.genCanvas();
+            GraphGen.displayGraphWindow();
         });
 
         //TabPane wrap all bottom1 components

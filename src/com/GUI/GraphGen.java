@@ -11,9 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.stage.Modality;
@@ -24,42 +24,30 @@ import java.text.DecimalFormat;
 
 
 
-
 public class GraphGen extends InputMatrix {
 
-    static Graph graph = new Graph();
+    static Graph graph;
     private static Edge[][] edges;
+    static boolean closeWindow;
 
-    public static void genCanvas() {
+    public static void displayGraphWindow() {
+        //Initialize display graph window
         Stage window = new Stage();
+        graph = new Graph();
+        closeWindow = false;
+
+        window.setOnCloseRequest(e ->{
+            closeWindow = true;
+            PopupBox.confirmBox(window);
+        });
 
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Graph drawing...");
+        window.setTitle("Graph Window");
 
-        int[][] matrix = {
-                {1, 1, 0, 1, 0},
-                {0, 1, 0, 0, 1},
-                {1, 0, 0, 1, 0},
-                {0, 0, 0, 1, 1}
-        };
-
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
-            int x = (int) (Math.random() * 4);
-            int y = (int) (Math.random() * 5);
-            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
-            System.out.println(x + " " + y);
-            updateGraph(matrix);
-        });
-        timeline.getKeyFrames().add(keyFrame);
-        timeline.playFromStart();
 
         BorderPane root = new BorderPane();
-
-        root.setLeft(settingBar());
-        root.setCenter(draw(matrix));
-        root.setBottom(hBottem(window));
+        root.setLeft(settingBar(window));
+        root.setCenter(initCanvas());
 
         Scene scene = new Scene(root, 1200, 800);
         scene.getStylesheets().add("com/GUI/styling.css");
@@ -68,16 +56,15 @@ public class GraphGen extends InputMatrix {
     }
 
 
-    public static BorderPane draw(int[][] matrix) {
+    public static Pane initCanvas() {
 
-        BorderPane root = new BorderPane();
-        root.setMinSize(800, 768);
-        root.setCenter(graph.getScrollPane());
+        Pane root = new Pane();
+        root.setMinSize(900, 800);
+        root.getChildren().add(graph.getScrollPane());
 
         Layout layout = new CircleLayout(graph);
 
         initBaseGraph();
-        //updateGraph(matrix);
         layout.execute();
 
         return root;
@@ -110,6 +97,7 @@ public class GraphGen extends InputMatrix {
         }
 
         graph.endUpdate();
+       // model.clearAddedLists();
     }
 
 
@@ -135,7 +123,29 @@ public class GraphGen extends InputMatrix {
         graph.endUpdate();
     }
 
-    private static VBox settingBar() {
+    public static void runAlgorithm(){
+        int[][] matrix = {
+                {1, 1, 0, 1, 0},
+                {0, 1, 0, 0, 1},
+                {1, 0, 0, 1, 0},
+                {0, 0, 0, 1, 1}
+        };
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
+            int x = (int) (Math.random() * 4);
+            int y = (int) (Math.random() * 5);
+            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
+            System.out.println(x + " " + y);
+            updateGraph(matrix);
+            if(closeWindow) timeline.stop();
+        });
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.playFromStart();
+    }
+
+    private static VBox settingBar(Stage window) {
         //Title
         Text title = new Text();
         title.setText("Setting");
@@ -168,23 +178,23 @@ public class GraphGen extends InputMatrix {
         leftLayout.setPadding(new Insets(20, 20, 20, 20));
         // leftLayout.setPadding(new Insets(20));
         //hbox
-        HBox h1 = new HBox();
-        h1.setSpacing(20);
-        h1.setAlignment(Pos.CENTER_RIGHT);
-        HBox h2 = new HBox();
-        h2.setAlignment(Pos.CENTER_RIGHT);
-        h2.setSpacing(20);
-        HBox h3 = new HBox();
-        h3.setSpacing(20);
-        h3.setAlignment(Pos.CENTER_RIGHT);
-        HBox h4 = new HBox();
-        h4.setSpacing(20);
-        h4.setAlignment(Pos.CENTER_RIGHT);
-        HBox h5 = new HBox();
-        h5.setSpacing(20);
-        h5.setAlignment(Pos.CENTER_RIGHT);
-        HBox hButton = new HBox();
-        hButton.setSpacing(40);
+        HBox sliderAlphaSet = new HBox();
+        sliderAlphaSet.setSpacing(20);
+        sliderAlphaSet.setAlignment(Pos.CENTER_RIGHT);
+        HBox sliderBetaSet = new HBox();
+        sliderBetaSet.setAlignment(Pos.CENTER_RIGHT);
+        sliderBetaSet.setSpacing(20);
+        HBox sliderESet = new HBox();
+        sliderESet.setSpacing(20);
+        sliderESet.setAlignment(Pos.CENTER_RIGHT);
+        HBox sliderAntSet = new HBox();
+        sliderAntSet.setSpacing(20);
+        sliderAntSet.setAlignment(Pos.CENTER_RIGHT);
+        HBox sliderQSet = new HBox();
+        sliderQSet.setSpacing(20);
+        sliderQSet.setAlignment(Pos.CENTER_RIGHT);
+        HBox ButtonSet = new HBox();
+        ButtonSet.setSpacing(40);
 
 
         // Text
@@ -287,24 +297,20 @@ public class GraphGen extends InputMatrix {
                 QInput.setText(String.valueOf(newValue.intValue()));
             }
         });
+
         //button
         Button update = new Button();
         update.setPrefSize(80, 30);
         update.setText("Run");
         update.setOnAction(e -> {
             if(update.getText()=="Run"){
-//            System.out.println(sliderE.getValue());
-//            System.out.println(alphaInput.getText());
-//            System.out.println(betaInput.getText());
-//            System.out.println(EInput.getText());
-//            System.out.println(AntInput.getText());
-//            System.out.println((QInput.getText()));
-                System.out.println("Cai lon");
+                closeWindow = false;
+                runAlgorithm();
                 update.setText("Stop");
             //
             }
             else {
-                System.out.println("Con cac");
+                closeWindow = true;
                 update.setText("Run");
             }
         });
@@ -319,45 +325,29 @@ public class GraphGen extends InputMatrix {
             sliderAnt.setValue(0);
             sliderQ.setValue(0);
         });
-        //scene
-        h1.getChildren().addAll(text1, sliderAlpha, alphaInput);
-        h2.getChildren().addAll(text2, sliderBeta, betaInput);
-        h3.getChildren().addAll(text3, sliderE, EInput);
-        h4.getChildren().addAll(text4, sliderAnt, AntInput);
-        h5.getChildren().addAll(text5, sliderQ, QInput);
-        hButton.getChildren().addAll(update, clear);
-        hButton.setAlignment(Pos.CENTER);
-        leftLayout.getChildren().addAll(title, h1, h2, h3, h4, h5, hButton);
-
-
-        //root.getChildren().addAll(leftLayout);
-
-        return leftLayout;
-    }
-
-    private static HBox hBottem(Stage window ) {
-        HBox bottemLayout = new HBox();
-        bottemLayout.setSpacing(250);
-        bottemLayout.setPadding(new Insets(30, 40, 100, 450));
-        //Button
-//        Button start = new Button();
-//        start.setPrefSize(80, 30);
-//        start.setText("Start");
-//
-//        Button pause = new Button();
-//        pause.setPrefSize(80, 30);
-//        pause.setText("Pause");
 
         Button close = new Button();
         close.setPrefSize(80, 30);
         close.setText("Close");
 
         close.setOnAction(e->{
-            PopupBox.confirmBox(window);
+            closeWindow = PopupBox.confirmBox(window);
         });
-        bottemLayout.getChildren().addAll(close);
-        return bottemLayout;
+        //scene
+        sliderAlphaSet.getChildren().addAll(text1, sliderAlpha, alphaInput);
+        sliderBetaSet.getChildren().addAll(text2, sliderBeta, betaInput);
+        sliderESet.getChildren().addAll(text3, sliderE, EInput);
+        sliderAntSet.getChildren().addAll(text4, sliderAnt, AntInput);
+        sliderQSet.getChildren().addAll(text5, sliderQ, QInput);
+        ButtonSet.getChildren().addAll(update, clear, close);
+        ButtonSet.setAlignment(Pos.CENTER);
+
+        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet, ButtonSet);
+
+        return leftLayout;
     }
+
+
 
 
 }

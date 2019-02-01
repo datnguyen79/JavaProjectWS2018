@@ -3,9 +3,9 @@ package com.GUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
 import com.GUI.ToggleSwitch;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class InputMatrix {
     //Default matrix size
     static int row = 6, col = 7;
+
     //Text field matrix to hold the cost between cities and generators, cities
     static TextField[][] tf;
 
@@ -31,15 +32,12 @@ public class InputMatrix {
                 //Generate title rows and columns
                 if(i == 0 && j == 0){
                     Label x = new Label("G\\D");
-                    x.setId("labelColor1");
                     GridPane.setConstraints(x,j,i);
                     grid.getChildren().add(x);
                 }
                 else if(i == 0 || j == 0){
-                    Label lb = new Label(i==0?"D"+Integer.toString(j):"G"+Integer.toString(i));
-                    lb.setFont(new Font("Arial", 18));
+                    Label lb = new Label(i==0?"D"+j:"G"+i);
                     lb.setAlignment(Pos.CENTER);
-                    lb.setId("labelColor1");
                     GridPane.setConstraints(lb,j,i);
                     grid.getChildren().add(lb);
                 }
@@ -71,68 +69,53 @@ public class InputMatrix {
         GridPane grid = new GridPane();
         grid.setVgap(5);
         grid.setHgap(5);
-        grid.setPadding( new Insets(20, 20, 20, 20));
+        grid.setPadding( new Insets(10, 10, 10, 10));
 
-        //RadioButton[][] buttonState = new RadioButton[row][1];
+        //Create a list of ToggleSwitch
         ArrayList<ToggleSwitch> switches = new ArrayList<>();
-        //ToggleSwitch toggleSwitch = new ToggleSwitch();
 
         for(int i = 0; i < row+1; i++){
             for(int j = 0;  j < 2; j++){
                 //Generate title rows and columns
                 if(i == 0 && j == 0){
                     Label x = new Label("Gn");
-                    x.setFont(new Font("Arial", 18));
-                    x.setId("labelColor1");
                     GridPane.setConstraints(x,j,i);
                     grid.getChildren().add(x);
                 }
                 else if(i == 0 || j == 0){
                     if(i != 0 && j == 0){
-                        Label lb = new Label("G"+Integer.toString(i)+"  ");
-                        lb.setFont(new Font("Arial", 18));
-                        lb.setAlignment(Pos.CENTER);
-                        lb.setId("labelColor1");
+                        Label lb = new Label("G"+i+"  ");
+                        //lb.setAlignment(Pos.CENTER);
                         GridPane.setConstraints(lb,j,i);
                         grid.getChildren().add(lb);
                     }
                     else if(i == 0 && j == 1){
                         Label onOff = new Label("State");
                         onOff.setPadding( new Insets(5, 30, 5, 30));
-                        onOff.setFont(new Font("Arial", 18));
                         onOff.setAlignment(Pos.CENTER);
-                        onOff.setId("labelColor1");
                         GridPane.setConstraints(onOff,j,i);
                         grid.getChildren().add(onOff);
                     }
                 }
                 //Then generate grid text field
                 else{
-                    /* About the grid of radio button
-                     * The coordinate of radio buttons have to minus by 1
-                     * Because we have already generated the title rows and columms
-                     */
 
-                    // Declare the button
-                    //buttonState[i-1][j-1] = new RadioButton();
+                    Pane switchWrap = new Pane();
                     ToggleSwitch tSwitch = new ToggleSwitch();
-                    switches.add(tSwitch);
-                    //Set alignment for the button
-                    //buttonState[i-1][j-1].setPrefHeight(50);
-                    //buttonState[i-1][j-1].setPrefWidth(50);
-                    //buttonState[i-1][j-1].setAlignment(Pos.CENTER);
-                    //buttonState[i-1][j-1].setPadding( new Insets(5, 30, 5, 30));
-                    //buttonState[i-1][j-1].setSelected(true);
-                    tSwitch.setAlignment(Pos.CENTER);
+                    switches.add(tSwitch); //Add new switch to Array list of switches
 
-                    //All generators are turned on by DEFAUFT
-                    //if(j == 1) buttonState[i-1][j-1].setSelected(true);;
-                    //GridPane.setConstraints(buttonState[i-1][j-1],j,i);
-                    GridPane.setConstraints(tSwitch,j,i);
-                    grid.getChildren().add(tSwitch);
+                    switchWrap.getChildren().add(tSwitch);
+                    switchWrap.setPadding(new Insets(10,0,0,0));
+                    GridPane.setConstraints(switchWrap,j,i);
+                    grid.getChildren().add(switchWrap);
                 }
             }
         }
+        //for(ToggleSwitch tSwitch : switches){
+        //    System.out.println(tSwitch.switchOnProperty()+"");
+        //}
+
+
         return grid;
     }
 

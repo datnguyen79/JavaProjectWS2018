@@ -52,6 +52,7 @@ public class Graph {
     }
 
     public void beginUpdate() {
+        model.clearAddedLists();
     }
 
     public void endUpdate() {

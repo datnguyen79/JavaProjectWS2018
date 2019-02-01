@@ -66,7 +66,9 @@ public class PopupBox {
         window.setScene(scene);
         window.showAndWait();
         //Close window if user click "yes"
-        if(answer) stage.close();
+        if(answer) {
+            stage.close();
+        }
         return answer;
     }
 

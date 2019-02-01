@@ -16,7 +16,7 @@ public class ToggleSwitch extends HBox {
     public SimpleBooleanProperty switchOnProperty() { return switchedOn; }
 
     private void init() {
-        label.setStyle("-fx-border-radius: 20");
+
         label.setText("ON");
 
         getChildren().addAll(button, label);
@@ -47,8 +47,8 @@ public class ToggleSwitch extends HBox {
 
     public ToggleSwitch() {
         init();
-        switchedOn.addListener((a,b,c) -> {
-            if (c) {
+        switchedOn.addListener((observableValue,oldValue,newValue) -> {
+            if (newValue) {
                 label.setText("ON");
                 setStyle("-fx-background-color: black;");
                 label.toFront();
