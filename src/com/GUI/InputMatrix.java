@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class InputMatrix {
     //Default matrix size
     static int row = 6, col = 7;
+    static int totalRow = row + col;
 
     //Text field matrix to hold the cost between cities and generators, cities
     static TextField[][] tf;
@@ -25,9 +26,10 @@ public class InputMatrix {
         grid.setVgap(5);
         grid.setHgap(5);
         grid.setPadding( new Insets(20, 20, 20, 20));
-        tf = new TextField[row][col];
+        tf = new TextField[totalRow][col];
+        int num = 0;
 
-        for(int i = 0; i < row+1; i++){
+        for(int i = 0; i < totalRow+1; i++){
             for(int j = 0;  j < col+1; j++){
                 //Generate title rows and columns
                 if(i == 0 && j == 0){
@@ -35,12 +37,28 @@ public class InputMatrix {
                     GridPane.setConstraints(x,j,i);
                     grid.getChildren().add(x);
                 }
-                else if(i == 0 || j == 0){
-                    Label lb = new Label(i==0?"D"+j:"G"+i);
+                else if(i == 0){
+                    Label lb = new Label("D"+j);
                     lb.setAlignment(Pos.CENTER);
                     GridPane.setConstraints(lb,j,i);
                     grid.getChildren().add(lb);
                 }
+                else  if(j == 0 ){
+                    if(i < row+1) {
+                        Label lb = new Label("G" + i);
+                        lb.setAlignment(Pos.CENTER);
+                        GridPane.setConstraints(lb, j, i);
+                        grid.getChildren().add(lb);
+                    }else{
+                        num += 1;
+                        System.out.println(num);
+                        Label lb = new Label("D" + num);
+                        lb.setAlignment(Pos.CENTER);
+                        GridPane.setConstraints(lb, j, i);
+                        grid.getChildren().add(lb);
+                    }
+                }
+
                 //Then generate grid text field
                 else{
                     tf[i-1][j-1] = new TextField();
@@ -120,9 +138,9 @@ public class InputMatrix {
     }
 
     public static double[][] getMatrixValue(){
-        double intMatrix[][] = new double[row][col];
+        double intMatrix[][] = new double[totalRow][col];
 
-        for(int i = 0; i < row; i++){
+        for(int i = 0; i < totalRow; i++){
             for(int j = 0;  j < col; j++){
                 if(tf[i][j].getText().length() == 0) intMatrix[i][j] = 0;
                 else intMatrix[i][j] = Double.parseDouble(tf[i][j].getText());
@@ -143,7 +161,7 @@ public class InputMatrix {
     }
 
     public static void clearMatrixValue(){
-        for(int i = 0; i < row; i++){
+        for(int i = 0; i < totalRow; i++){
             for(int j = 0;  j < col; j++){
                 tf[i][j].setText("");
             }
