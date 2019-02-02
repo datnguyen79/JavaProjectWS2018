@@ -10,9 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -129,20 +127,14 @@ public class GraphGen extends InputMatrix {
         graph.endUpdate();
     }
 
-    public static void runAlgorithm(){
-//        int[][] matrix = {
-//                {1, 1, 0, 1, 0},
-//                {0, 1, 0, 0, 1},
-//                {1, 0, 0, 1, 0},
-//                {0, 0, 0, 1, 1}
-//        };
+    public static void runAlgorithm(Settings currentSetting){
 
         boolean[] state = new boolean[row];
         for (int i=0; i < row; i++) {
             state[i] = true;
         }
 
-        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, state);
+        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, state, currentSetting);
         mTSP.printMatrix();
 
         AtomicInteger iter = new AtomicInteger(0);
@@ -150,11 +142,6 @@ public class GraphGen extends InputMatrix {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
-//            int x = (int) (Math.random() * 4);
-//            int y = (int) (Math.random() * 5);
-//            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
-//            System.out.println(x + " " + y);
-//            updateGraph(matrix);
             updateGraph(mTSP.solve());
             iter.getAndIncrement();
             if(closeWindow || iter.intValue() >= 100) timeline.stop();
@@ -212,7 +199,11 @@ public class GraphGen extends InputMatrix {
         sliderQSet.setSpacing(30);
         sliderQSet.setAlignment(Pos.CENTER_RIGHT);
         HBox ButtonSet = new HBox();
-        ButtonSet.setSpacing(20);
+
+        ButtonSet.setSpacing(40);
+        HBox textIterSet = new HBox();
+        textIterSet.setSpacing(20);
+        textIterSet.setAlignment(Pos.CENTER_LEFT);
 
 
         // Text
@@ -246,7 +237,24 @@ public class GraphGen extends InputMatrix {
         text5.setTextAlignment(TextAlignment.CENTER);
         text5.setId("textColor2");
 
-        //FORMAT
+        Text text6 = new Text();
+        text6.setText("Number of Iteration");
+        text6.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        text6.setTextAlignment(TextAlignment.CENTER);
+        text6.setId("textColor2");
+        //Text field iteration
+        TextField numofIteration = new TextField();
+        numofIteration.setPrefWidth(50);
+        numofIteration.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    numofIteration.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
         DecimalFormat df = new DecimalFormat("0.##");
         DecimalFormat df1 = new DecimalFormat("0.#");
 
@@ -317,25 +325,33 @@ public class GraphGen extends InputMatrix {
         });
 
         //button
-        Button run = new Button();
-        run.setPrefSize(80, 30);
-        run.setText("Run");
-        run.setOnAction(e -> {
-            runAlgorithm();
-            run.setDisable(true);
-        });
 
         Button pauseContinue = new Button();
         pauseContinue.setPrefSize(80, 30);
         pauseContinue.setText("Pause");
         pauseContinue.setOnAction(e -> {
-            if(pauseContinue.getText()=="Pause"){
+            if (pauseContinue.getText() == "Pause") {
                 closeWindow = true;
                 pauseContinue.setText("Continue");
             }
-            else {
-                runAlgorithm();
-                pauseContinue.setText("Pause");
+        });
+
+        Button run = new Button();
+        run.setPrefSize(80, 30);
+        run.setText("Run");
+        run.setOnAction(e -> {
+            if(run.getText()=="Run" && numofIteration.getText().trim().isEmpty()){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Failure");
+                alert.setContentText("You have to fill in the Iteration box");
+                alert.showAndWait();
+            }
+            else if(run.getText()=="Run" && !numofIteration.getText().trim().isEmpty()){
+                closeWindow = false;
+                Settings currentSetting = new Settings(sliderAlpha.getValue(),sliderBeta.getValue(),
+                        sliderE.getValue(), sliderQ.getValue(), sliderAnt.getValue());
+                runAlgorithm(currentSetting);
+                run.setDisable(true);
             }
         });
 
@@ -349,6 +365,7 @@ public class GraphGen extends InputMatrix {
             sliderE.setValue(0);
             sliderAnt.setValue(0);
             sliderQ.setValue(0);
+            numofIteration.setText("0");
         });
 
         Button close = new Button();
@@ -364,10 +381,13 @@ public class GraphGen extends InputMatrix {
         sliderESet.getChildren().addAll(text3, sliderE, EInput);
         sliderAntSet.getChildren().addAll(text4, sliderAnt, AntInput);
         sliderQSet.getChildren().addAll(text5, sliderQ, QInput);
+
         ButtonSet.getChildren().addAll(run, pauseContinue, clear, close);
+        textIterSet.getChildren().addAll(text6,numofIteration);
+
         ButtonSet.setAlignment(Pos.CENTER);
 
-        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet, ButtonSet);
+        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet,textIterSet, ButtonSet);
 
         return leftLayout;
     }

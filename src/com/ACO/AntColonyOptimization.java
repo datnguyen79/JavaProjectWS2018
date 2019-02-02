@@ -21,7 +21,7 @@ public class AntColonyOptimization {
     private int finalTrail[][];
     private double finalLength;
 
-    public AntColonyOptimization(int noOfCities, int noOfDepots, boolean[] generatorState) {
+    public AntColonyOptimization(int noOfCities, int noOfDepots, boolean[] generatorState, Settings settings) {
         graph = generateRandomMatrix(noOfCities, noOfDepots);
         numberOfCities = noOfCities;
         numberOfDepots = noOfDepots;
@@ -40,7 +40,7 @@ public class AntColonyOptimization {
          */
         for (int i=0; i < noOfDepots; i++) {
         	if (state[i])
-        		colonies.add(new AntColonySystem(numberOfCities, numberOfDepots, i, graph));
+        		colonies.add(new AntColonySystem(numberOfCities, numberOfDepots, i, graph, settings));
         }
         
     }

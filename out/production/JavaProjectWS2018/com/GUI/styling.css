@@ -178,3 +178,10 @@ and open the template in the editor.
     -fx-background-color: #353940;
     -fx-border-color: #121a2a;
 }
+.slider .track {
+    -fx-padding: 5;
+}
+
+.slider .thumb {
+    -fx-padding: 10;
+}
