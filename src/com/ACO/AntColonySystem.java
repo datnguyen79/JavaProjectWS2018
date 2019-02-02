@@ -5,13 +5,13 @@ import java.util.stream.IntStream;
 
 public class AntColonySystem {
     private double c = 1.0;
-    private double alpha = 2;
-    private double beta = 5;
-    private double evaporation = 0.5;
-    private double Q = 1000;
+    private double alpha;
+    private double beta;
+    private double evaporation;
+    private double Q;
+    private double antFactor;
     private double randomFactor = 0.01;
-    private double antFactor = 0.8;
-    
+
     private int numberOfCities;
     private int numberOfDepots;
     
@@ -28,10 +28,17 @@ public class AntColonySystem {
     private int[] bestTourOrder;
     private double bestTourLength;
     
-    public AntColonySystem(int noOfCities, int noOfDepots, int depot, double graph[][]) {
+    public AntColonySystem(int noOfCities, int noOfDepots, int depot, double graph[][], Settings settings) {
     	this.graph = graph.clone();
     	numberOfCities = noOfCities;
     	numberOfDepots = noOfDepots;
+
+    	alpha = settings.getAlpha();
+    	beta = settings.getBeta();
+    	evaporation = settings.getEvaporation();
+    	Q = settings.getQ();
+    	antFactor = settings.getAntFactor();
+
     	numberOfAnts = (int) (numberOfCities * antFactor);
     	trails = new double[numberOfCities+1][numberOfCities];
     	probabilities = new double[numberOfCities];
