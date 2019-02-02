@@ -1,5 +1,7 @@
 package com.GUI;
 
+import com.ACO.*;
+
 import com.fxgraph.graph.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -21,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class GraphGen extends InputMatrix {
@@ -78,21 +80,27 @@ public class GraphGen extends InputMatrix {
 
         graph.beginUpdate();
 
-        int cities = 5;
-        int generator = 4;
+        int cities = col;
+        int generators = row;
 
         for (int i = 0; i < cities; i++) {
             model.addCell("C" + i, CellType.CIRCLE);
         }
 
-        for (int i = 0; i < generator; i++) {
+        for (int i = 0; i < generators; i++) {
             model.addCell("G" + i, CellType.HEXAGON);
         }
 
-        edges = new Edge[generator][cities];
-        for (int i = 0; i < generator; i++) {
+        edges = new Edge[generators+cities][cities];
+        for (int i = 0; i < generators; i++) {
             for (int j = 0; j < cities; j++) {
                 edges[i][j] = model.addEdge("G" + i, "C" + j, 10);
+            }
+        }
+
+        for (int i = generators; i < generators+cities; i++) {
+            for (int j = 0; j < cities; j++) {
+                edges[i][j] = model.addEdge("C" + (i-generators), "C" + j, 10);
             }
         }
 
@@ -105,17 +113,16 @@ public class GraphGen extends InputMatrix {
 
         graph.beginUpdate();
 
-        int cities = 5;
-        int generator = 4;
+        int cities = col;
+        int generators = row;
 
-        for (int i = 0; i < generator; i++) {
+        for (int i = 0; i < generators + cities; i++) {
             for (int j = 0; j < cities; j++) {
                 if (matrix[i][j] == 0) {
                     edges[i][j].setStatus(false);
                 }
                 if (matrix[i][j] == 1) {
                     edges[i][j].setStatus(true);
-                    //model.addEdge("City_" + j, "Gen_" + i, 10);
                 }
             }
         }
@@ -124,22 +131,34 @@ public class GraphGen extends InputMatrix {
     }
 
     public static void runAlgorithm(){
-        int[][] matrix = {
-                {1, 1, 0, 1, 0},
-                {0, 1, 0, 0, 1},
-                {1, 0, 0, 1, 0},
-                {0, 0, 0, 1, 1}
-        };
+//        int[][] matrix = {
+//                {1, 1, 0, 1, 0},
+//                {0, 1, 0, 0, 1},
+//                {1, 0, 0, 1, 0},
+//                {0, 0, 0, 1, 1}
+//        };
+
+        boolean[] state = new boolean[row];
+        for (int i=0; i < row; i++) {
+            state[i] = true;
+        }
+
+        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, state);
+        mTSP.printMatrix();
+
+        AtomicInteger iter = new AtomicInteger(0);
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
-            int x = (int) (Math.random() * 4);
-            int y = (int) (Math.random() * 5);
-            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
-            System.out.println(x + " " + y);
-            updateGraph(matrix);
-            if(closeWindow) timeline.stop();
+//            int x = (int) (Math.random() * 4);
+//            int y = (int) (Math.random() * 5);
+//            matrix[x][y] = matrix[x][y] == 1 ? 0 : 1;
+//            System.out.println(x + " " + y);
+//            updateGraph(matrix);
+            updateGraph(mTSP.solve());
+            iter.getAndIncrement();
+            if(closeWindow || iter.intValue() >= 1000) timeline.stop();
         });
         timeline.getKeyFrames().add(keyFrame);
         timeline.playFromStart();

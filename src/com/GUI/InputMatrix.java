@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class InputMatrix {
     //Default matrix size
-    static int row = 6, col = 7;
+    static int row = 6 , col = 7 ;
     static int totalRow = row + col;
 
     //Text field matrix to hold the cost between cities and generators, cities
