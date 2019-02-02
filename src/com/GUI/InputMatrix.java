@@ -16,9 +16,11 @@ public class InputMatrix {
     //Default matrix size
     static int row = 6 , col = 7 ;
     static int totalRow = row + col;
+    static boolean[] state;
 
     //Text field matrix to hold the cost between cities and generators, cities
     static TextField[][] tf;
+    static private ArrayList<ToggleSwitch> switches = new ArrayList<>();
 
     public static GridPane matrixDisplay(){
 
@@ -90,7 +92,6 @@ public class InputMatrix {
         grid.setPadding( new Insets(10, 10, 10, 10));
 
         //Create a list of ToggleSwitch
-        ArrayList<ToggleSwitch> switches = new ArrayList<>();
 
         for(int i = 0; i < row+1; i++){
             for(int j = 0;  j < 2; j++){
@@ -135,6 +136,14 @@ public class InputMatrix {
 
 
         return grid;
+    }
+
+    public static boolean[] getState(){
+        int i = 0;
+        for(ToggleSwitch tSwitch : switches){
+            state[i++] = tSwitch.switchOnProperty().get();
+        }
+        return state;
     }
 
     public static double[][] getMatrixValue(){

@@ -39,7 +39,6 @@ public class GraphGen extends InputMatrix {
         closeWindow = false;
 
         window.setOnCloseRequest(e ->{
-            closeWindow = true;
             PopupBox.confirmBox(window);
         });
 
@@ -75,13 +74,13 @@ public class GraphGen extends InputMatrix {
     private static void initBaseGraph() {
 
         Model model = graph.getModel();
-        //Model model = new Model();
-        //graph.getModel();
 
         graph.beginUpdate();
 
         int cities = col;
         int generators = row;
+
+        double[][] matrix = getMatrixValue();
 
         for (int i = 0; i < cities; i++) {
             model.addCell("C" + i, CellType.CIRCLE);
@@ -94,13 +93,13 @@ public class GraphGen extends InputMatrix {
         edges = new Edge[generators+cities][cities];
         for (int i = 0; i < generators; i++) {
             for (int j = 0; j < cities; j++) {
-                edges[i][j] = model.addEdge("G" + i, "C" + j, 10);
+                edges[i][j] = model.addEdge("G" + i, "C" + j, matrix[i][j]);
             }
         }
 
         for (int i = generators; i < generators+cities; i++) {
             for (int j = 0; j < cities; j++) {
-                edges[i][j] = model.addEdge("C" + (i-generators), "C" + j, 10);
+                edges[i][j] = model.addEdge("C" + (i-generators), "C" + j, matrix[i][j]);
             }
         }
 
@@ -158,7 +157,7 @@ public class GraphGen extends InputMatrix {
 //            updateGraph(matrix);
             updateGraph(mTSP.solve());
             iter.getAndIncrement();
-            if(closeWindow || iter.intValue() >= 1000) timeline.stop();
+            if(closeWindow || iter.intValue() >= 100) timeline.stop();
         });
         timeline.getKeyFrames().add(keyFrame);
         timeline.playFromStart();
@@ -198,22 +197,22 @@ public class GraphGen extends InputMatrix {
         // leftLayout.setPadding(new Insets(20));
         //hbox
         HBox sliderAlphaSet = new HBox();
-        sliderAlphaSet.setSpacing(20);
+        sliderAlphaSet.setSpacing(30);
         sliderAlphaSet.setAlignment(Pos.CENTER_RIGHT);
         HBox sliderBetaSet = new HBox();
         sliderBetaSet.setAlignment(Pos.CENTER_RIGHT);
-        sliderBetaSet.setSpacing(20);
+        sliderBetaSet.setSpacing(30);
         HBox sliderESet = new HBox();
-        sliderESet.setSpacing(20);
+        sliderESet.setSpacing(30);
         sliderESet.setAlignment(Pos.CENTER_RIGHT);
         HBox sliderAntSet = new HBox();
-        sliderAntSet.setSpacing(20);
+        sliderAntSet.setSpacing(30);
         sliderAntSet.setAlignment(Pos.CENTER_RIGHT);
         HBox sliderQSet = new HBox();
-        sliderQSet.setSpacing(20);
+        sliderQSet.setSpacing(30);
         sliderQSet.setAlignment(Pos.CENTER_RIGHT);
         HBox ButtonSet = new HBox();
-        ButtonSet.setSpacing(40);
+        ButtonSet.setSpacing(20);
 
 
         // Text
@@ -318,21 +317,28 @@ public class GraphGen extends InputMatrix {
         });
 
         //button
-        Button update = new Button();
-        update.setPrefSize(80, 30);
-        update.setText("Run");
-        update.setOnAction(e -> {
-            if(update.getText()=="Run"){
-                closeWindow = false;
-                runAlgorithm();
-                update.setText("Stop");
-            //
+        Button run = new Button();
+        run.setPrefSize(80, 30);
+        run.setText("Run");
+        run.setOnAction(e -> {
+            runAlgorithm();
+            run.setDisable(true);
+        });
+
+        Button pauseContinue = new Button();
+        pauseContinue.setPrefSize(80, 30);
+        pauseContinue.setText("Pause");
+        pauseContinue.setOnAction(e -> {
+            if(pauseContinue.getText()=="Pause"){
+                closeWindow = true;
+                pauseContinue.setText("Continue");
             }
             else {
-                closeWindow = true;
-                update.setText("Run");
+                runAlgorithm();
+                pauseContinue.setText("Pause");
             }
         });
+
 
         Button clear = new Button();
         clear.setPrefSize(80, 30);
@@ -358,7 +364,7 @@ public class GraphGen extends InputMatrix {
         sliderESet.getChildren().addAll(text3, sliderE, EInput);
         sliderAntSet.getChildren().addAll(text4, sliderAnt, AntInput);
         sliderQSet.getChildren().addAll(text5, sliderQ, QInput);
-        ButtonSet.getChildren().addAll(update, clear, close);
+        ButtonSet.getChildren().addAll(run, pauseContinue, clear, close);
         ButtonSet.setAlignment(Pos.CENTER);
 
         leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet, ButtonSet);
