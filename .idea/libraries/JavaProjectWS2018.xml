@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JavaProjectWS2018">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/JavaProjectWS2018.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
