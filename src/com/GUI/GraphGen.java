@@ -5,6 +5,8 @@ import com.ACO.*;
 import com.fxgraph.graph.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -28,13 +31,13 @@ public class GraphGen extends InputMatrix {
 
     static Graph graph;
     private static Edge[][] edges;
-    static boolean closeWindow;
+    private static Timeline timeline;
+    private static int maxIteration;
 
     public static void displayGraphWindow() {
         //Initialize display graph window
         Stage window = new Stage();
         graph = new Graph();
-        closeWindow = false;
 
         window.setOnCloseRequest(e ->{
             PopupBox.confirmBox(window);
@@ -137,14 +140,13 @@ public class GraphGen extends InputMatrix {
         AntColonyOptimization mTSP = new AntColonyOptimization(col, row, state, currentSetting);
         mTSP.printMatrix();
 
-        AtomicInteger iter = new AtomicInteger(0);
+        AtomicInteger iteration = new AtomicInteger(0);
+        timeline = new Timeline();
 
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(maxIteration);
         KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
             updateGraph(mTSP.solve());
-            iter.getAndIncrement();
-            if(closeWindow || iter.intValue() >= 100) timeline.stop();
+            iteration.getAndIncrement();
         });
         timeline.getKeyFrames().add(keyFrame);
         timeline.playFromStart();
@@ -167,7 +169,7 @@ public class GraphGen extends InputMatrix {
         Slider sliderE = new Slider(0.1, 0.99, 0);
         sliderE.setBlockIncrement(0.01);
 
-        Slider sliderAnt = new Slider(0.1, 0.9, 0.1);
+        Slider sliderAnt = new Slider(0.5, 1, 0.1);
         sliderAnt.setBlockIncrement(0.1);
 
         Slider sliderQ = new Slider(1, 1000, 1);
@@ -199,12 +201,13 @@ public class GraphGen extends InputMatrix {
         sliderQSet.setSpacing(30);
         sliderQSet.setAlignment(Pos.CENTER_RIGHT);
         HBox ButtonSet = new HBox();
-
         ButtonSet.setSpacing(40);
         HBox textIterSet = new HBox();
         textIterSet.setSpacing(20);
-        textIterSet.setAlignment(Pos.CENTER_LEFT);
-
+        textIterSet.setAlignment(Pos.CENTER);
+        HBox Iteration = new HBox();
+        Iteration.setSpacing(20);
+        Iteration.setAlignment(Pos.CENTER);
 
         // Text
         Text text1 = new Text();
@@ -242,6 +245,17 @@ public class GraphGen extends InputMatrix {
         text6.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
         text6.setTextAlignment(TextAlignment.CENTER);
         text6.setId("textColor2");
+
+        Text text7 = new Text();
+        text7.setText("Iteration: ");
+        text7.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        text7.setTextAlignment(TextAlignment.CENTER);
+        text7.setId("textColor2");
+
+        Text text8 = new Text("100");
+
+
+
         //Text field iteration
         TextField numofIteration = new TextField();
         numofIteration.setPrefWidth(50);
@@ -329,16 +343,25 @@ public class GraphGen extends InputMatrix {
         Button pauseContinue = new Button();
         pauseContinue.setPrefSize(80, 30);
         pauseContinue.setText("Pause");
+        pauseContinue.setDisable(true);
         pauseContinue.setOnAction(e -> {
             if (pauseContinue.getText() == "Pause") {
-                closeWindow = true;
+                timeline.pause();
                 pauseContinue.setText("Continue");
+
+            }
+            else if(pauseContinue.getText() == "Continue"){
+                timeline.play();
+                pauseContinue.setText("Pause");
             }
         });
 
         Button run = new Button();
         run.setPrefSize(80, 30);
         run.setText("Run");
+
+        AtomicBoolean isClickedRun = new AtomicBoolean(true);
+
         run.setOnAction(e -> {
             if(run.getText()=="Run" && numofIteration.getText().trim().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -347,14 +370,20 @@ public class GraphGen extends InputMatrix {
                 alert.showAndWait();
             }
             else if(run.getText()=="Run" && !numofIteration.getText().trim().isEmpty()){
-                closeWindow = false;
                 Settings currentSetting = new Settings(sliderAlpha.getValue(),sliderBeta.getValue(),
                         sliderE.getValue(), sliderQ.getValue(), sliderAnt.getValue());
+                maxIteration = Integer.parseInt(numofIteration.getText());
                 runAlgorithm(currentSetting);
+                isClickedRun.set(true);
                 run.setDisable(true);
+                pauseContinue.setDisable(false);
             }
         });
-
+        if(isClickedRun.get()){
+            System.out.println("Alosadsagsagdsfgdytfhfthfghfd");
+            text8.textProperty().bind(new SimpleIntegerProperty(timeline.getCycleCount()).asString());
+            text8.setId("textColor2");
+        }
 
         Button clear = new Button();
         clear.setPrefSize(80, 30);
@@ -373,7 +402,9 @@ public class GraphGen extends InputMatrix {
         close.setText("Close");
 
         close.setOnAction(e->{
-            closeWindow = PopupBox.confirmBox(window);
+            if (PopupBox.confirmBox(window)) {
+                timeline.stop();
+            }
         });
         //scene
         sliderAlphaSet.getChildren().addAll(text1, sliderAlpha, alphaInput);
@@ -384,16 +415,12 @@ public class GraphGen extends InputMatrix {
 
         ButtonSet.getChildren().addAll(run, pauseContinue, clear, close);
         textIterSet.getChildren().addAll(text6,numofIteration);
-
+        Iteration.getChildren().addAll(text7,text8);
         ButtonSet.setAlignment(Pos.CENTER);
 
-        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet,textIterSet, ButtonSet);
+        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet,textIterSet, ButtonSet, Iteration);
 
         return leftLayout;
     }
-
-
-
-
 }
 
