@@ -139,9 +139,11 @@ public class InputMatrix {
     }
 
     public static boolean[] getState(){
+        state = new boolean[row];
         int i = 0;
         for(ToggleSwitch tSwitch : switches){
-            state[i++] = tSwitch.switchOnProperty().get();
+            state[i] = tSwitch.switchOnProperty().get();
+            i++;
         }
         return state;
     }

@@ -21,8 +21,8 @@ public class AntColonyOptimization {
     private int finalTrail[][];
     private double finalLength;
 
-    public AntColonyOptimization(int noOfCities, int noOfDepots, boolean[] generatorState, Settings settings) {
-        graph = generateRandomMatrix(noOfCities, noOfDepots);
+    public AntColonyOptimization(int noOfCities, int noOfDepots, double[][] graph, boolean[] generatorState, Settings settings) {
+        this.graph = Arrays.copyOf(graph, graph.length);
         numberOfCities = noOfCities;
         numberOfDepots = noOfDepots;
         
@@ -193,5 +193,9 @@ public class AntColonyOptimization {
     	}
     	return length;
     }
+
+    public double getFinalLength() {
+    	return this.finalLength;
+	}
 
 }

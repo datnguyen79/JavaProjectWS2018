@@ -107,11 +107,11 @@ public class LayoutGUI  extends InputMatrix{
                 String text = textArea.getText();
                 String[] str1 = text.split("\n");
                 String[] str0 = str1[0].split(" ");
-                int[][] matrix = new int[row][col];
-                row = str1.length;
+                //int[][] matrix = new int[row][col];
+                totalRow = str1.length;
                 col = str0.length;
                 root.setLeft(leftLayout());
-                for(int i=0; i < row; i++){
+                for(int i=0; i < totalRow; i++){
                     String[] str2 = str1[i].split(" ");
                     for(int j = 0; j < col; j++){
                         tf[i][j].setText(str2[j]);

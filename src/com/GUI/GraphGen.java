@@ -34,6 +34,7 @@ public class GraphGen extends InputMatrix {
     private static Timeline timeline;
     private static int maxIteration;
 
+
     public static void displayGraphWindow() {
         //Initialize display graph window
         Stage window = new Stage();
@@ -130,26 +131,31 @@ public class GraphGen extends InputMatrix {
         graph.endUpdate();
     }
 
-    public static void runAlgorithm(Settings currentSetting){
+    public static Label runAlgorithm(Settings currentSetting){
 
         boolean[] state = new boolean[row];
         for (int i=0; i < row; i++) {
             state[i] = true;
         }
 
-        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, state, currentSetting);
+        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, getMatrixValue(), getState(), currentSetting);
         mTSP.printMatrix();
-
+        Label label = new Label();
+        label.setStyle("-fx-font-size: 16");
+        //Integer value = new Integer(0);
         AtomicInteger iteration = new AtomicInteger(0);
-        timeline = new Timeline();
 
+        timeline = new Timeline();
         timeline.setCycleCount(maxIteration);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(200), action -> {
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(500), action -> {
             updateGraph(mTSP.solve());
             iteration.getAndIncrement();
+            //label.textProperty().bind(new SimpleIntegerProperty(iteration.get()).asString());
+            label.setText("Iteration: "+iteration.get()+"\tLength: "+mTSP.getFinalLength());
         });
         timeline.getKeyFrames().add(keyFrame);
         timeline.playFromStart();
+        return label;
     }
 
     private static VBox settingBar(Stage window) {
@@ -205,9 +211,9 @@ public class GraphGen extends InputMatrix {
         HBox textIterSet = new HBox();
         textIterSet.setSpacing(20);
         textIterSet.setAlignment(Pos.CENTER);
-        HBox Iteration = new HBox();
-        Iteration.setSpacing(20);
-        Iteration.setAlignment(Pos.CENTER);
+        HBox displayIteration = new HBox();
+        displayIteration.setSpacing(20);
+        displayIteration.setAlignment(Pos.CENTER);
 
         // Text
         Text text1 = new Text();
@@ -246,18 +252,15 @@ public class GraphGen extends InputMatrix {
         text6.setTextAlignment(TextAlignment.CENTER);
         text6.setId("textColor2");
 
-        Text text7 = new Text();
-        text7.setText("Iteration: ");
-        text7.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
-        text7.setTextAlignment(TextAlignment.CENTER);
-        text7.setId("textColor2");
 
-        Text text8 = new Text("100");
+
+        //Label iteration = new Label();
 
 
 
         //Text field iteration
         TextField numofIteration = new TextField();
+        numofIteration.setText("15");
         numofIteration.setPrefWidth(50);
         numofIteration.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -356,34 +359,45 @@ public class GraphGen extends InputMatrix {
             }
         });
 
-        Button run = new Button();
-        run.setPrefSize(80, 30);
-        run.setText("Run");
+        Button runStop = new Button();
+        runStop.setPrefSize(80, 30);
+        runStop.setText("Run");
 
-        AtomicBoolean isClickedRun = new AtomicBoolean(true);
 
-        run.setOnAction(e -> {
-            if(run.getText()=="Run" && numofIteration.getText().trim().isEmpty()){
+
+        runStop.setOnAction(e -> {
+            if(runStop.getText()=="Run" && numofIteration.getText().trim().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Failure");
                 alert.setContentText("You have to fill in the Iteration box");
                 alert.showAndWait();
             }
-            else if(run.getText()=="Run" && !numofIteration.getText().trim().isEmpty()){
+            else if(runStop.getText()=="Run" && !numofIteration.getText().trim().isEmpty()){
+                displayIteration.getChildren().clear();
                 Settings currentSetting = new Settings(sliderAlpha.getValue(),sliderBeta.getValue(),
                         sliderE.getValue(), sliderQ.getValue(), sliderAnt.getValue());
                 maxIteration = Integer.parseInt(numofIteration.getText());
-                runAlgorithm(currentSetting);
-                isClickedRun.set(true);
-                run.setDisable(true);
+                if(maxIteration == 0){
+                    maxIteration = 20;
+                    numofIteration.setText("15");
+                }
+                displayIteration.getChildren().addAll(runAlgorithm(currentSetting));
+                runStop.setText("Stop");
+                timeline.setOnFinished(event -> {
+                    runStop.setText("Run");
+                    pauseContinue.setDisable(true);
+
+                });
                 pauseContinue.setDisable(false);
             }
+            else if(runStop.getText()=="Stop"){
+                timeline.stop();
+                displayIteration.getChildren().clear();
+                pauseContinue.setText("Pause");
+                runStop.setText("Run");
+            }
         });
-        if(isClickedRun.get()){
-            System.out.println("Alosadsagsagdsfgdytfhfthfghfd");
-            text8.textProperty().bind(new SimpleIntegerProperty(timeline.getCycleCount()).asString());
-            text8.setId("textColor2");
-        }
+
 
         Button clear = new Button();
         clear.setPrefSize(80, 30);
@@ -413,12 +427,13 @@ public class GraphGen extends InputMatrix {
         sliderAntSet.getChildren().addAll(text4, sliderAnt, AntInput);
         sliderQSet.getChildren().addAll(text5, sliderQ, QInput);
 
-        ButtonSet.getChildren().addAll(run, pauseContinue, clear, close);
+        ButtonSet.getChildren().addAll(runStop, pauseContinue, clear, close);
         textIterSet.getChildren().addAll(text6,numofIteration);
-        Iteration.getChildren().addAll(text7,text8);
+        //displayIteration.getChildren().addAll(text7);
         ButtonSet.setAlignment(Pos.CENTER);
 
-        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet, sliderAntSet, sliderQSet,textIterSet, ButtonSet, Iteration);
+        leftLayout.getChildren().addAll(title, sliderAlphaSet, sliderBetaSet, sliderESet,
+                sliderAntSet, sliderQSet,textIterSet, ButtonSet, displayIteration);
 
         return leftLayout;
     }
