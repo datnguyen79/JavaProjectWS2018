@@ -29,7 +29,7 @@ public class LayoutGUI  extends InputMatrix{
     // Main layout
     private static BorderPane root = new BorderPane();
     // Matrix to hold old value and restore it later
-    private static double[][] preMatrix = new double[row][col];
+    private static double[][] preMatrix = new double[totalRow][col];
     private static int preRow, preCol, preTotalRow;
     // Text field to hold the number of Generator and Destination
     private static TextField numDes = new TextField();
@@ -229,6 +229,7 @@ public class LayoutGUI  extends InputMatrix{
             root.setLeft(leftLayout());
             root.setRight(rightLayout());
         });
+
         fillButton.setOnAction(e -> {
             for(int i = 0;  i < (totalRow>=preTotalRow?preTotalRow:totalRow); i++){
                 for(int j = 0; j < (col>=preCol?preCol:col); j++){

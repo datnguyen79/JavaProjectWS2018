@@ -20,7 +20,7 @@ public class InputMatrix {
 
     //Text field matrix to hold the cost between cities and generators, cities
     static TextField[][] tf;
-    static private ArrayList<ToggleSwitch> switches = new ArrayList<>();
+    static private ArrayList<ToggleSwitch> switches;
 
     public static GridPane matrixDisplay(){
 
@@ -67,16 +67,18 @@ public class InputMatrix {
                     tf[i-1][j-1].setPrefHeight(50);
                     tf[i-1][j-1].setPrefWidth(50);
                     tf[i-1][j-1].setAlignment(Pos.CENTER);
-                    tf[i-1][j-1].setText("0");
+                    tf[i-1][j-1].setText("");
                     GridPane.setConstraints(tf[i-1][j-1],j,i);
                     //Handle invalid input (ie. Sysmbol, text..)
                     //Receive only integer
                     TextField curText = tf[i-1][j-1];
+                    /*
                     curText.textProperty().addListener((observer, oldvalue, newvalue)->{
                         if(!curText.getText().matches("[\\d]")){
                             curText.setText(curText.getText().replaceAll("[^\\d]", ""));
                         }
                     });
+                    */
                     grid.getChildren().add(tf[i-1][j-1]);
                 }
             }
@@ -85,7 +87,7 @@ public class InputMatrix {
     }
 
     public static GridPane generatorState(){
-
+        switches = new ArrayList<>();
         GridPane grid = new GridPane();
         grid.setVgap(5);
         grid.setHgap(5);
@@ -153,9 +155,11 @@ public class InputMatrix {
 
         for(int i = 0; i < totalRow; i++){
             for(int j = 0;  j < col; j++){
-                if(tf[i][j].getText().length() == 0) intMatrix[i][j] = 0;
-                else intMatrix[i][j] = Double.parseDouble(tf[i][j].getText());
+                //if(tf[i][j].getText().length() == 0) intMatrix[i][j] = 0;
+                 intMatrix[i][j] = Double.parseDouble(tf[i][j].getText());
+                 System.out.print("(" + tf[i][j].getText() + ", " + intMatrix[i][j] +")");
             }
+            System.out.println("");
         }
         return intMatrix;
     }

@@ -50,7 +50,7 @@ public class GraphGen extends InputMatrix {
         root.setLeft(settingBar(window));
         root.setCenter(initCanvas());
 
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1280, 800);
         scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.show();
