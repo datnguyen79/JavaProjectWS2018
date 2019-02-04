@@ -248,12 +248,6 @@ public class GraphGen extends InputMatrix {
         text6.setTextAlignment(TextAlignment.CENTER);
         text6.setId("textColor2");
 
-
-
-        //Label iteration = new Label();
-
-
-
         //Text field iteration
         TextField numberOfIteration = new TextField();
         numberOfIteration.setText("15");
@@ -395,6 +389,7 @@ public class GraphGen extends InputMatrix {
                 timeline.stop();
                 displayIteration.getChildren().clear();
                 pauseContinue.setText("Pause");
+                pauseContinue.setDisable(true);
                 runStop.setText("Run");
             }
         });

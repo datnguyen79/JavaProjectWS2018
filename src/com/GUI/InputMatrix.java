@@ -7,8 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import com.GUI.ToggleSwitch;
-
 import java.util.ArrayList;
 
 public class InputMatrix {
