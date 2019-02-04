@@ -65,10 +65,20 @@ public class Cell extends Pane {
         text.setFont(new Font(16));
         text.setStyle("-fx-font-weight: bold");
 
-
         this.shape = shape;
 
         getChildren().addAll(shape,text);
+
+    }
+
+    public void removeView(Node shape, String cellId) {
+        Text text = new Text(10,25,cellId);
+        text.setFont(new Font(16));
+        text.setStyle("-fx-font-weight: bold");
+
+        this.shape = shape;
+
+        getChildren().removeAll(shape,text);
 
     }
 
@@ -80,5 +90,7 @@ public class Cell extends Pane {
         return cellId;
     }
 
-    public void setState() {};
+    public void setState(){}
+
+    public boolean getState(){return true;}
 }

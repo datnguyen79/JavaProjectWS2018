@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 import com.fxgraph.graph.Cell;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class HexagonCell extends Cell {
 
@@ -29,17 +31,23 @@ public class HexagonCell extends Cell {
 
     public void changeColor() {
         if (state) {
+            removeView(view, this.getCellId());
             view.setStroke(Color.GREEN);
             view.setFill(Color.GREEN);
 
             setView( view, this.getCellId());
         } else {
+            removeView(view, this.getCellId());
             view.setStroke(Color.RED);
             view.setFill(Color.RED);
 
             setView( view, this.getCellId());
         }
+    }
 
+    @Override
+    public boolean getState() {
+        return this.state;
     }
 
 }

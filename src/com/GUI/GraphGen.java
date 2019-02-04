@@ -5,8 +5,6 @@ import com.ACO.*;
 import com.fxgraph.graph.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -23,7 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.fxgraph.graph.Cell;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -85,11 +83,12 @@ public class GraphGen extends InputMatrix {
         double[][] matrix = getMatrixValue();
 
         for (int i = 0; i < cities; i++) {
-            model.addCell("C" + i, CellType.CIRCLE);
+            model.addCell("C" + i, CellType.CIRCLE, true);
         }
 
+        boolean[] currentState = getState();
         for (int i = 0; i < generators; i++) {
-            model.addCell("G" + i, CellType.HEXAGON);
+            model.addCell("G" + i, CellType.HEXAGON, currentState[i]);
         }
 
         edges = new Edge[generators+cities][cities];
@@ -131,18 +130,13 @@ public class GraphGen extends InputMatrix {
         graph.endUpdate();
     }
 
-    public static Label runAlgorithm(Settings currentSetting){
+    public static Label runAlgorithm(Settings currentSetting, boolean[] state){
 
-        boolean[] state = new boolean[row];
-        for (int i=0; i < row; i++) {
-            state[i] = true;
-        }
-
-        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, getMatrixValue(), getState(), currentSetting);
+        AntColonyOptimization mTSP = new AntColonyOptimization(col, row, getMatrixValue(), state, currentSetting);
         mTSP.printMatrix();
         Label label = new Label();
         label.setStyle("-fx-font-size: 16");
-        //Integer value = new Integer(0);
+
         AtomicInteger iteration = new AtomicInteger(0);
 
         timeline = new Timeline();
@@ -381,7 +375,12 @@ public class GraphGen extends InputMatrix {
                     maxIteration = 20;
                     numofIteration.setText("15");
                 }
-                displayIteration.getChildren().addAll(runAlgorithm(currentSetting));
+                for (Cell cell : graph.getModel().getAllCells()) {
+                    if (cell.getCellId().startsWith("G")) {
+                        state[cell.getCellId().charAt(1)-'0'] = cell.getState();
+                    }
+                }
+                displayIteration.getChildren().addAll(runAlgorithm(currentSetting, state));
                 runStop.setText("Stop");
                 timeline.setOnFinished(event -> {
                     runStop.setText("Run");

@@ -73,7 +73,7 @@ public class Model {
         return allEdges;
     }
 
-    public void addCell(String id, CellType type) {
+    public void addCell(String id, CellType type, boolean state) {
 
         switch (type) {
 
@@ -84,6 +84,8 @@ public class Model {
 
             case HEXAGON:
                 HexagonCell hexagonCell = new HexagonCell(id);
+                if (!state)
+                    hexagonCell.setState();
                 addCell(hexagonCell);
                 break;
 

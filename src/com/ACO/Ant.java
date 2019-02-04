@@ -6,12 +6,19 @@ public class Ant {
 	protected int trail[];
 	protected boolean visited[];
 
+	/**
+	 * @param tourSize the size of the path that the ants will travel
+	 */
 	public Ant(int tourSize) {
 		this.trailSize = tourSize;
 		this.trail = new int[tourSize];
 		this.visited = new boolean[tourSize];
 	}
 
+	/**
+	 * @param currentIndex the current index of the ant on its path
+	 * @param city the city number the ant visit
+	 */
 	protected void visitCity(int currentIndex, int city) {
 		trail[currentIndex + 1] = city;
 		if (currentIndex==-1) {
