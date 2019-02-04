@@ -28,10 +28,19 @@ public class Ant {
 		}
 	}
 
+	/**
+	 * @param i index of the city
+	 * @return true/false depends on the whether the city has been visited or not
+	 */
 	protected boolean visited(int i) {
 		return visited[i];
 	}
 
+	/**
+	 * @param graph the cost matrix
+	 * @param noOfDepots the number of depots
+	 * @return the length of the trail the Ant traveled
+	 */
 	protected double trailLength(double graph[][], int noOfDepots) {
 		double length = graph[trail[0]][trail[1]];
 		for (int i = 1; i < trailSize - 1; i++) {
