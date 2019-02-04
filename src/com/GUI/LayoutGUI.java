@@ -87,12 +87,12 @@ public class LayoutGUI  extends InputMatrix{
 
         ///Open action
         //Receive matrix from text file
-        TextArea textArea = new TextArea(); //use TextArea for holding input text
+        TextArea textArea = new TextArea(); //use TextArea for holding input text and further editing
         menuOpen.setOnAction((final ActionEvent e) -> {
             try {
                 File file1 = fileChooser.showOpenDialog(window);
                 if(file1 == null){
-                    PopupBox.cancelBox();
+                    PopupBox.messageBox("Warning", "No text file has been selected.");
                 }
                 else{
                     Scanner sc = new Scanner(file1);
@@ -110,7 +110,10 @@ public class LayoutGUI  extends InputMatrix{
                 //int[][] matrix = new int[row][col];
                 totalRow = str1.length;
                 col = str0.length;
+                row = totalRow - col;
+                //Update the contain of the left layout and right layout
                 root.setLeft(leftLayout());
+                root.setRight(rightLayout());
                 for(int i=0; i < totalRow; i++){
                     String[] str2 = str1[i].split(" ");
                     for(int j = 0; j < col; j++){
@@ -118,9 +121,8 @@ public class LayoutGUI  extends InputMatrix{
                     }
                 }
                 textArea.setText("");
-                numGen.setText(row+"");
+                numGen.setText((totalRow-col)+"");
                 numDes.setText(col+"");
-
             }
         });
         ///about button action
@@ -137,7 +139,7 @@ public class LayoutGUI  extends InputMatrix{
             File file1 = fileChooser.showSaveDialog(window);
 
             if (file1 != null) {
-                saveTextToFile(InputMatrix.matrixToText(InputMatrix.getMatrixValue(), row, col), file1);
+                saveTextToFile(InputMatrix.matrixToText(InputMatrix.getMatrixValue(), totalRow, col), file1);
             }
         });
         menuDefault.setOnAction(e -> {
@@ -186,15 +188,16 @@ public class LayoutGUI  extends InputMatrix{
 
         // Structure of the Bottom 1:
         // VBox"bottom1" = HBox"LabelnButton1"(Label"des" + textField"numDes") + HBox"LabelnButton2"(Label"gen" + textField"numGen")
+
         HBox LabelnText1, LabelnText2;
         LabelnText1 = new HBox(20);
         LabelnText2 = new HBox(20);
 
 
         //Label
-        Label des = new Label("Number of Destination: ");
+        Label des = new Label("Number of Destinations: ");
         des.setId("labelColor1");
-        Label gen = new Label("Number of Generator:   ");
+        Label gen = new Label("Number of Generators:   ");
         gen.setId("labelColor1");
         //TextField
         numDes.setPrefHeight(30);
@@ -203,6 +206,18 @@ public class LayoutGUI  extends InputMatrix{
         numGen.setPrefHeight(30);
         numGen.setPrefWidth(80);
         numGen.setText(Integer.toString(row));
+
+        numDes.textProperty().addListener((observer, oldvalue, newvalue)->{
+            if(!numDes.getText().matches("[\\d]")){
+                numDes.setText(numDes.getText().replaceAll("[^\\d]", ""));
+            }
+        });
+
+        numGen.textProperty().addListener((observer, oldvalue, newvalue)->{
+            if(!numGen.getText().matches("[\\d]")){
+                numGen.setText(numGen.getText().replaceAll("[^\\d]", ""));
+            }
+        });
         //Button
         Button addButtonG = new Button("+");
         Button subButtonG = new Button("–");
@@ -215,22 +230,30 @@ public class LayoutGUI  extends InputMatrix{
         Button fillButton = new Button("Fill");
         fillButton.setPrefHeight(30);
         fillButton.setPrefWidth(80);
+        fillButton.setDisable(true);
 
 
         //set Button event
         resizeButton.setOnAction(e -> {
+            fillButton.setDisable(false);
             preCol = col;
             preRow = row;
             preTotalRow = row + col;
             preMatrix = getMatrixValue();
-            row = Integer.parseInt(numGen.getText());
-            col = Integer.parseInt(numDes.getText());
+            
+            try {
+                row = Integer.parseInt(numGen.getText());
+                col = Integer.parseInt(numDes.getText());
+            }catch (NumberFormatException err){
+                PopupBox.messageBox("Error","Number of Generators and Cities must not be empty");
+            }
             totalRow = row + col;
             root.setLeft(leftLayout());
             root.setRight(rightLayout());
         });
 
         fillButton.setOnAction(e -> {
+            fillButton.setDisable(true);
             for(int i = 0;  i < (totalRow>=preTotalRow?preTotalRow:totalRow); i++){
                 for(int j = 0; j < (col>=preCol?preCol:col); j++){
                     tf[i][j].setText(preMatrix[i][j]+"");
@@ -288,19 +311,27 @@ public class LayoutGUI  extends InputMatrix{
             InputMatrix.clearMatrixValue();
         });
         createButton.setOnAction(e ->{
-            GraphGen.displayGraphWindow();
+            // Check whether all cells are filled or not
+            boolean isAllCellFilled = true;
+            double[][] checkMatrix = getMatrixValue();
+            for(int i = 0; i < totalRow; i++){
+                for(int j = 0; j < col; j++){
+                    if (checkMatrix[i][j] == 0) isAllCellFilled = false;
+                }
+            }
+            if(isAllCellFilled) GraphGen.displayGraphWindow();
+            else PopupBox.messageBox("Error","Error: Some cells are empty.");
         });
 
         //TabPane wrap all bottom1 components
         TabPane botTabPane = new TabPane();
         botTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         Tab resizeTab = new Tab("Edit Size");
-        Tab settingGen = new Tab("Set Generator");
         resizeTab.setContent(tab1);
 
         //Adding all components of the bottom layout
         bottom2.getChildren().addAll(createButton, clearButton, closeButton);
-        botTabPane.getTabs().addAll(resizeTab,settingGen);
+        botTabPane.getTabs().addAll(resizeTab);
         bottom.getChildren().addAll(botTabPane, bottom2);
         return bottom;
     }
@@ -312,11 +343,11 @@ public class LayoutGUI  extends InputMatrix{
          */
         VBox left = new VBox(10);
         ScrollPane wrapMatrix = new ScrollPane();
-        Text text3 = new Text(10, 50, "(*) Input Electricity Cost: ");
+        Text text3 = new Text(10, 50, "- Input Electricity Cost -");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
 
-        /*Wrap the gridPane by the ScrollPane
+        /* Wrap the gridPane by the ScrollPane
          * So when the size of the GridPane increase
          * The window size will not become extremely big
          */
@@ -335,7 +366,7 @@ public class LayoutGUI  extends InputMatrix{
          *Use in: Border Pane root
          */
         VBox right = new VBox(10);
-        Text text3 = new Text(10, 50, "Generator State: ");
+        Text text3 = new Text(10, 50, "- Generator State -");
         text3.setFont(new Font(20));
         text3.setId("textColor2");
 
@@ -349,10 +380,12 @@ public class LayoutGUI  extends InputMatrix{
 
         right.getChildren().addAll(text3, wrapGenState);
         right.setPadding( new Insets(10, 10, 10, 10));
+
         return right;
     }
 
     public static Scene mainLayout(Stage stage){
+        // Gathering all components for main layout
         root.setTop(LayoutGUI.topLayout());
         root.setLeft(LayoutGUI.leftLayout());
         root.setRight(LayoutGUI.rightLayout());

@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 
 import com.GUI.ToggleSwitch;
 
@@ -53,7 +52,6 @@ public class InputMatrix {
                         grid.getChildren().add(lb);
                     }else{
                         num += 1;
-                        System.out.println(num);
                         Label lb = new Label("D" + num);
                         lb.setAlignment(Pos.CENTER);
                         GridPane.setConstraints(lb, j, i);
@@ -71,14 +69,7 @@ public class InputMatrix {
                     GridPane.setConstraints(tf[i-1][j-1],j,i);
                     //Handle invalid input (ie. Sysmbol, text..)
                     //Receive only integer
-                    TextField curText = tf[i-1][j-1];
-                    /*
-                    curText.textProperty().addListener((observer, oldvalue, newvalue)->{
-                        if(!curText.getText().matches("[\\d]")){
-                            curText.setText(curText.getText().replaceAll("[^\\d]", ""));
-                        }
-                    });
-                    */
+
                     grid.getChildren().add(tf[i-1][j-1]);
                 }
             }
@@ -95,7 +86,7 @@ public class InputMatrix {
 
         //Create a list of ToggleSwitch
 
-        for(int i = 0; i < row+1; i++){
+        for(int i = 0; i < (totalRow-col)+1; i++){
             for(int j = 0;  j < 2; j++){
                 //Generate title rows and columns
                 if(i == 0 && j == 0){
@@ -106,7 +97,6 @@ public class InputMatrix {
                 else if(i == 0 || j == 0){
                     if(i != 0 && j == 0){
                         Label lb = new Label("G"+i+"  ");
-                        //lb.setAlignment(Pos.CENTER);
                         GridPane.setConstraints(lb,j,i);
                         grid.getChildren().add(lb);
                     }
@@ -132,16 +122,12 @@ public class InputMatrix {
                 }
             }
         }
-        //for(ToggleSwitch tSwitch : switches){
-        //    System.out.println(tSwitch.switchOnProperty()+"");
-        //}
-
 
         return grid;
     }
 
     public static boolean[] getState(){
-        state = new boolean[row];
+        state = new boolean[totalRow-col];
         int i = 0;
         for(ToggleSwitch tSwitch : switches){
             state[i] = tSwitch.switchOnProperty().get();
@@ -155,11 +141,9 @@ public class InputMatrix {
 
         for(int i = 0; i < totalRow; i++){
             for(int j = 0;  j < col; j++){
-                //if(tf[i][j].getText().length() == 0) intMatrix[i][j] = 0;
-                 intMatrix[i][j] = Double.parseDouble(tf[i][j].getText());
-                 System.out.print("(" + tf[i][j].getText() + ", " + intMatrix[i][j] +")");
+                if(tf[i][j].getText().length() == 0) intMatrix[i][j] = 0;
+                else intMatrix[i][j] = Double.parseDouble(tf[i][j].getText());
             }
-            System.out.println("");
         }
         return intMatrix;
     }

@@ -87,27 +87,29 @@ public class PopupBox {
 
         Text text = new Text(10, 50, "File contains: ");
         text.setFont(new Font(20));
+        text.setId("textColor2");
 
         Text helpfulText = new Text(10, 50, "*** Here users can review or edit the matrix before import ***");
         helpfulText.setFont(new Font(16));
+        helpfulText.setId("textColor2");
 
-        Button imptButton = new Button("Import");
-        imptButton.setPrefSize(80, 30);
+        Button importButton = new Button("Import");
+        importButton.setPrefSize(80, 30);
 
-        Button instButton = new Button("Instuction");
+        Button instButton = new Button("Instruction");
         instButton.setPrefSize(100,30);
 
         instButton.setOnAction(e -> {
-            instBox();
+            instructionBox();
         });
 
-        imptButton.setOnAction((ActionEvent e) -> {
+        importButton.setOnAction((ActionEvent e) -> {
             triggered = true;
             window.close();
         });
 
         textArea.setPrefSize(300, 400);
-        hbox.getChildren().addAll( instButton, imptButton);
+        hbox.getChildren().addAll( instButton, importButton);
         layout.getChildren().addAll(text, textArea,helpfulText,hbox);
 
         Scene scene = new Scene(layout);
@@ -117,14 +119,14 @@ public class PopupBox {
         return triggered;
     }
 
-    public static void cancelBox(){
+    public static void messageBox(String title, String message){
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Warning!");
+        window.setTitle(title);
         window.setMinWidth(300);
 
         Label label = new Label();
-        label.setText("No text file has been selected.");
+        label.setText(message);
 
         Button okButton = new Button("Ok");
         okButton.setPrefSize(80, 30);
@@ -149,11 +151,12 @@ public class PopupBox {
 
         //Scene
         Scene scene = new Scene(borderPane);
+        scene.getStylesheets().add("com/GUI/Styling.css");
         window.setScene(scene);
         window.showAndWait();
     }
 
-    public static void instBox(){
+    public static void instructionBox(){
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Instruction");
@@ -161,9 +164,11 @@ public class PopupBox {
 
         Text text1 = new Text(10, 50,"- The matrix must be NxN matrix.");
         text1.setFont(new Font(16));
+        text1.setId("textColor2");
 
         Text text2 = new Text(10, 50,"- Each integer must be seperated by a space.");
         text2.setFont(new Font(16));
+        text2.setId("textColor2");
 
 
         Button okButton = new Button("Ok");
@@ -189,6 +194,7 @@ public class PopupBox {
 
         //Scene
         Scene scene = new Scene(borderPane);
+        scene.getStylesheets().add("com/GUI/styling.css");
         window.setScene(scene);
         window.showAndWait();
     }

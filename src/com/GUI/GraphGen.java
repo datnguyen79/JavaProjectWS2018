@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
@@ -36,6 +37,7 @@ public class GraphGen extends InputMatrix {
     public static void displayGraphWindow() {
         //Initialize display graph window
         Stage window = new Stage();
+        window.initStyle(StageStyle.UNDECORATED);
         graph = new Graph();
 
         window.setOnCloseRequest(e ->{
@@ -253,15 +255,15 @@ public class GraphGen extends InputMatrix {
 
 
         //Text field iteration
-        TextField numofIteration = new TextField();
-        numofIteration.setText("15");
-        numofIteration.setPrefWidth(50);
-        numofIteration.textProperty().addListener(new ChangeListener<String>() {
+        TextField numberOfIteration = new TextField();
+        numberOfIteration.setText("15");
+        numberOfIteration.setPrefWidth(50);
+        numberOfIteration.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    numofIteration.setText(newValue.replaceAll("[^\\d]", ""));
+                    numberOfIteration.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
@@ -360,20 +362,20 @@ public class GraphGen extends InputMatrix {
 
 
         runStop.setOnAction(e -> {
-            if(runStop.getText()=="Run" && numofIteration.getText().trim().isEmpty()){
+            if(runStop.getText()=="Run" && numberOfIteration.getText().trim().isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Failure");
                 alert.setContentText("You have to fill in the Iteration box");
                 alert.showAndWait();
             }
-            else if(runStop.getText()=="Run" && !numofIteration.getText().trim().isEmpty()){
+            else if(runStop.getText()=="Run" && !numberOfIteration.getText().trim().isEmpty()){
                 displayIteration.getChildren().clear();
                 Settings currentSetting = new Settings(sliderAlpha.getValue(),sliderBeta.getValue(),
                         sliderE.getValue(), sliderQ.getValue(), sliderAnt.getValue());
-                maxIteration = Integer.parseInt(numofIteration.getText());
+                maxIteration = Integer.parseInt(numberOfIteration.getText());
                 if(maxIteration == 0){
                     maxIteration = 20;
-                    numofIteration.setText("15");
+                    numberOfIteration.setText("15");
                 }
                 for (Cell cell : graph.getModel().getAllCells()) {
                     if (cell.getCellId().startsWith("G")) {
@@ -407,7 +409,7 @@ public class GraphGen extends InputMatrix {
             sliderE.setValue(0);
             sliderAnt.setValue(0);
             sliderQ.setValue(0);
-            numofIteration.setText("0");
+            numberOfIteration.setText("0");
         });
 
         Button close = new Button();
@@ -416,7 +418,11 @@ public class GraphGen extends InputMatrix {
 
         close.setOnAction(e->{
             if (PopupBox.confirmBox(window)) {
-                timeline.stop();
+                // In case user want to exit without running the algorithm
+                // and the timeline haven't stated yet so it cause timeline.stop() error
+                // so I use try catch to fix it
+                try{timeline.stop();}
+                catch (NullPointerException err) {System.out.print("Timeline stopped");}
             }
         });
         //scene
@@ -427,7 +433,7 @@ public class GraphGen extends InputMatrix {
         sliderQSet.getChildren().addAll(text5, sliderQ, QInput);
 
         ButtonSet.getChildren().addAll(runStop, pauseContinue, clear, close);
-        textIterSet.getChildren().addAll(text6,numofIteration);
+        textIterSet.getChildren().addAll(text6,numberOfIteration);
         //displayIteration.getChildren().addAll(text7);
         ButtonSet.setAlignment(Pos.CENTER);
 
