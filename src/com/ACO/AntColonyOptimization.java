@@ -2,8 +2,6 @@ package com.ACO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
-import java.util.stream.IntStream;
 
 public class AntColonyOptimization {
 
@@ -13,7 +11,6 @@ public class AntColonyOptimization {
     private double graph[][];
 
     private ArrayList<AntColonySystem> colonies = new ArrayList<>();
-    private Random random = new Random();
 
     private boolean state[];
     private int finalTrail[][];
@@ -45,15 +42,6 @@ public class AntColonyOptimization {
         		colonies.add(new AntColonySystem(numberOfCities, numberOfDepots, i, graph, settings));
         }
         
-    }
-
-    public void printMatrix() {
-    	IntStream.range(0, numberOfCities + numberOfDepots)
-    		.forEach(i -> {
-    			IntStream.range(0, numberOfCities)
-    				.forEach(j -> System.out.print(this.graph[i][j]+"   "));
-    			System.out.println("");
-    		});	
     }
 
     /**
