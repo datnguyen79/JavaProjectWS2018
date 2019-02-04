@@ -6,8 +6,6 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class AntColonyOptimization {
-	
-    private int maxIterations = 1000;
 
     private int numberOfCities;
     private int numberOfDepots;
@@ -21,6 +19,10 @@ public class AntColonyOptimization {
     private int finalTrail[][];
     private double finalLength;
 
+	/**
+	 * @param graph the cost matrix
+	 * @param generatorState array of boolean for the state of the generators
+	 */
     public AntColonyOptimization(int noOfCities, int noOfDepots, double[][] graph, boolean[] generatorState, Settings settings) {
         this.graph = Arrays.copyOf(graph, graph.length);
         numberOfCities = noOfCities;
@@ -45,17 +47,6 @@ public class AntColonyOptimization {
         
     }
 
-    /**
-     * Generate graph
-     */
-    public double[][] generateRandomMatrix(int n, int noOfDepots) {
-        double[][] randomMatrix = new double[n + noOfDepots][n];
-        IntStream.range(0, n+ noOfDepots)
-            .forEach(i -> IntStream.range(0, n)
-                .forEach(j -> randomMatrix[i][j] = Math.abs(random.nextInt(100)) + 1 ));
-        return randomMatrix;
-    }
-    
     public void printMatrix() {
     	IntStream.range(0, numberOfCities + numberOfDepots)
     		.forEach(i -> {
@@ -64,15 +55,7 @@ public class AntColonyOptimization {
     			System.out.println("");
     		});	
     }
-    
-//    public void startAntOptimization() {
-//        IntStream.rangeClosed(1, 100)
-//        	.forEach(i -> {
-//        		System.out.println("Attempt #" + i);
-//				solve();
-//        	});
-//    }
-    
+
     /**
      * Perform ant optimization
      */
@@ -80,22 +63,18 @@ public class AntColonyOptimization {
     	setupColonies();
     	for (AntColonySystem colony : colonies) {
     		colony.clearTrails();
-    		for (int i=0; i< maxIterations; i++) {
-    			colony.moveAnts();
-        		colony.updateTrails();
-        		colony.updateBest();
-    		}
+    		colony.moveAnts();
+    		colony.updateTrails();
+    		colony.updateBest();
     	}
-    	for (AntColonySystem colony : colonies) {
-    		colony.printColonyBest();
-    	}
+
     	findBest();
-    	printBest();
+
     	return finalTrail;
     }
     
     /***
-     * Initial solution
+     * Setup each colony in each depot
      */
     public void setupColonies() {
     	for (AntColonySystem colony : colonies) {
@@ -103,17 +82,7 @@ public class AntColonyOptimization {
     		colony.setupAnts();
     	}
     }
-    
-    /***
-     * Compute total length of all the colonies
-     */
-    public double totalLength(ArrayList<AntColonySystem> colonies) {
-    	double total = 0;
-    	for (AntColonySystem colony : colonies) {
-    		total += colony.getTourlength();
-    	}
-    	return total;
-    }
+
 
 	public void findBest() {
 		double curFinalLength = 0.0;
@@ -172,16 +141,6 @@ public class AntColonyOptimization {
 			finalTrail = Arrays.copyOf(curFinalTrail, curFinalTrail.length);
 		}
 
-	}
-
-	public void printBest() {
-		System.out.println("Best solution: " + finalLength);
-		for (int i=0; i< numberOfCities + numberOfDepots; i++) {
-			for (int j=0; j<numberOfCities; j++) {
-				System.out.print(finalTrail[i][j]+" ");
-			}
-			System.out.println("");
-		}
 	}
 
 	public double computeLength(int[][] trail) {

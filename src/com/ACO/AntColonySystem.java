@@ -27,7 +27,10 @@ public class AntColonySystem {
 
     private int[] bestTourOrder;
     private double bestTourLength;
-    
+
+    /**
+     * @param graph the cost matrix
+     */
     public AntColonySystem(int noOfCities, int noOfDepots, int depot, double graph[][], Settings settings) {
     	this.graph = graph.clone();
     	numberOfCities = noOfCities;
@@ -137,8 +140,8 @@ public class AntColonySystem {
                 }
             }
         }
-
     }
+
     /**
      * Update trails that ants used
      */
@@ -176,18 +179,7 @@ public class AntColonySystem {
         }
 
     }
-    
-    public void printColonyBest() {
-    	for (int i=0; i<getBestTourOrder().length; i++) {
-    		if (i==0) {
-    			System.out.print("G");
-    		} else {
-    			System.out.print("D");
-    		}
-    		System.out.print(getBestTourOrder()[i]+" ");
-    	}
-    	System.out.println("Length: " + getTourlength());
-    }
+
     /**
      * Clear trails after simulation
      */
@@ -206,13 +198,5 @@ public class AntColonySystem {
     public int[] getBestTourOrder() {
     	return bestTourOrder;
     }
-    
-//    public void printTrails() {
-//    	for (int i=0; i < numberOfCities+1 ; i++) {
-//    		for (int j=0; j < numberOfCities; j++) {
-//    			System.out.print(trails[i][j]+" ");
-//    		}
-//    	}
-//    }
     
 }
